@@ -1,0 +1,972 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Retro Snacks</title>
+    <!-- favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <!-- Android/Chrome -->
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'android-chrome-192x192.png' %}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{% static 'android-chrome-512x512.png' %}">
+    <!-- Iphone -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon-180x180.png' %}">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Owl Carousel CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    
+    <!-- Eigen CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+</head>
+
+<body>
+{% load static %}
+    <!-- ✅ Navbar -->
+    <nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <a class="d-lg-none mobile-offerte-btn ms-1" href="{% url 'offerte' %}">
+            <i class="fas fa-file-invoice"></i> Offerte
+        </a>
+        
+        {% if acties %}
+        <button class="d-lg-none mobile-acties-btn ms-1" onclick="openActiesPopup()">
+            <i class="fas fa-tags"></i> Acties
+        </button>
+        {% endif %}
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item {% if request.resolver_match.url_name == 'offerte' %}active{% endif %}">
+                    <a class="nav-link btn btn-offerte" href="{% url 'offerte' %}">
+                        <i class="fas fa-file-invoice"></i> Offerte
+                    </a>
+                </li>
+                {% if acties %}
+                <li class="nav-item d-none d-lg-block">
+                    <button class="nav-link btn btn-acties" onclick="openActiesPopup()">
+                        <i class="fas fa-tags"></i> Acties
+                    </button>
+                </li>
+                {% endif %}
+                <li class="nav-item {% if request.resolver_match.url_name == 'index' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'index' %}">Home</a>
+                </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'formules' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'formules' %}">Formules</a>
+                </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'event' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'event' %}">Groot.event</a>
+                </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'contact' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/#afbeeldingen-sectie">Foto's</a>
+                </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'SnacksSauzen' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'SnacksSauzen' %}">Snacks&Sauzen</a>
+                </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'faq' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'faq' %}">FAQ</a>
+                </li>
+            </ul>
+
+            <!-- Social Media Icons -->
+            <div class="social-icons ms-3">
+                <a href="https://www.facebook.com/profile.php?id=61554125164968" target="_blank"><i class="fa-brands fa-facebook fa-2x"></i></a>
+                <a href="https://www.instagram.com/retro.snacks/" target="_blank"><i class="fa-brands fa-instagram fa-2x"></i></a>
+                <a href="https://g.co/kgs/83aKXqU" target="_blank">
+                    <img src="/media/google.PNG" alt="Google Reviews" class="google-review-navbar">
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- ✅ Hero Section -->
+<div class="hero d-flex flex-column align-items-center text-center">
+    
+    <h1>Retro Snacks</h1>
+    <p>Wij brengen smaakvolle momenten naar jouw evenement.</p>
+</div>
+
+
+<div class="container text-center my-5">
+    <h2 class="lijst-tittel intro-text">prijsberekening</h2>
+    <hr class="retro-line">
+</div>    
+<br>
+    <div class="promo-container">
+        <div class="promo-row">
+            <!-- First Promo Card -->
+            <div class="promo-card">
+                <div class="promo-content">
+                    <br>
+                    <div class="people-count">100+ personen</div>
+                    <div class="discount-amount">€0,50</div>
+                    <div class="discount-text">korting per persoon</div>
+                </div>
+                <div class="promo-ribbon">AANBIEDING</div>
+            </div>
+    
+            <!-- Second Promo Card -->
+            <div class="promo-card">
+                <div class="promo-content">
+                    <br>
+                    <div class="people-count">200+ personen</div>
+                    <div class="discount-amount">€1,00</div>
+                    <div class="discount-text">korting per persoon</div>
+                </div>
+                <div class="promo-ribbon">AANBIEDING</div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <div class="container text-center my-5">
+        <h3 class="lijst-tittel extra-text">Krijg direct een prijsberekening. Akkoord met ons voorstel? Vraag direct de beschikbaarheid van de gevraagde datum aan. Events +300 personen kan u hier aanvragen: <a href="{% url 'event' %}">"groot event"</a>.</h3>
+    </div>
+    <!-- Popup voor Acties -->
+<div class="custom-acties-popup-overlay" id="customActiesOverlay" onclick="closeActiesPopup()">
+    <div class="custom-acties-popup" onclick="event.stopPropagation()">
+        <!-- Popup Header -->
+        <div class="custom-acties-popup-header">
+            <h2 class="custom-acties-popup-title">
+                <i class="fas fa-fire"></i> Acties van het Moment
+            </h2>
+            <button class="custom-acties-close-btn" onclick="closeActiesPopup()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Popup Content -->
+        <div class="custom-acties-popup-content">
+            <div class="custom-acties-grid">
+                {% for actie in acties %}
+                <div class="custom-actie-card">
+                    <div class="custom-actie-icon">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <h3 class="custom-actie-title">{{ actie.titel }}</h3>
+                    <p class="custom-actie-description">{{ actie.omschrijving }}</p>
+                    <span class="custom-actie-date">
+                        <i class="fas fa-calendar"></i> Geldig t/m {{ actie.actief_tot|date:"d-m-Y" }}
+                    </span>
+                </div>
+                {% empty %}
+                <div class="custom-no-acties">
+                    <i class="fas fa-inbox"></i>
+                    <h3>Geen Acties Beschikbaar</h3>
+                    <p>Momenteel zijn er geen actieve acties. Kom later terug voor geweldige deals!</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <div class="offerte-container">
+    <h1 class="offerte-heading">Offerte Formulier</h1>
+    <form method="POST" action="/save_offerte/" id="offerteForm">
+    {% csrf_token %}
+            <div class="form-grid">
+                <!-- Persoonlijke Gegevens Section -->
+                <h2><u>Persoonlijke Gegevens</u></h2>
+                <div class="offerte-form-group">
+                    <label for="naam_contactpersoon">Volledige naam contactpersoon *</label>
+                    <input type="text" class="form-control" id="naam_contactpersoon" required>
+                </div>
+                
+                <div class="offerte-form-group">
+                    <label for="naam_bedrijf">Naam bedrijf</label>
+                    <input type="text" class="form-control" id="naam_bedrijf">
+                </div>
+                
+                <div class="offerte-form-group">
+                    <label for="email">E-mail *</label>
+                    <input type="email" class="form-control" id="email" required>
+                </div>
+                
+                <div class="offerte-form-group">
+                    <label for="email_confirm">Bevestig E-mail *</label>
+                    <input type="email" class="form-control" id="email_confirm" required>
+                </div>
+    
+                <div class="offerte-form-group">
+                    <label for="telefoon">Telefoon *</label>
+                    <input type="tel" class="form-control" id="telefoon" required>
+                </div>
+                
+                <div class="offerte-form-group">
+                    <label for="btw">BTW-nummer bedrijf</label>
+                    <input type="text" class="form-control" id="btw">
+                </div>
+    
+                <!-- Personal Address -->
+                <div class="offerte-form-group">
+                    <h3 class="form-section-title"><u>Contact/Factuuradres *</u></h3>
+          
+                    <label for="straat">Straat *</label>
+                    <input type="text" class="form-control" id="straat" required>
+                </div>
+                
+                <div class="offerte-form-group">
+                  <label for="nummer">Nummer + bus *</label>
+                    <input type="text" class="form-control small-input" id="nummer" required>
+                </div>
+                
+                <div class="offerte-form-group">
+                    <label for="gemeente">Gemeente *</label>
+                    <input type="text" class="form-control" id="gemeente" required>
+                </div>
+    
+                <!-- Event Gegevens Section -->
+                <h2><u>Event Gegevens</u></h2>
+                <div class="offerte-form-group datetime-group">
+                    <div>
+                        <label for="gewenste_datum">Gewenste datum *</label>
+                        <input type="date" class="form-control" id="gewenste_datum" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="gewenste_tijd">Gewenste tijd *</label>
+                        <select class="form-control" id="gewenste_tijd" required>
+                            <option value="">Selecteer een tijd</option>
+                            <!-- Tijdsopties worden hier via JavaScript toegevoegd -->
+                        </select>
+                    </div>
+                </div>
+    
+                <div class="offerte-form-group full-width">
+                    <label for="event_address"></label>
+                    <h3 class="form-section-title"><u>Event adres *</u></h3>
+                    <div class="address-inputs">
+                        <input type="text" class="form-control" id="event_straat" placeholder="Straat" required>
+                        <input type="text" class="form-control small-input" id="event_nummer" placeholder="Nr+bus" required>
+                        <input type="text" class="form-control" id="event_gemeente" placeholder="Gemeente" required>
+                    </div>
+                </div>
+                
+                <div class="offerte-form-group">
+                    <label for="personen">Aantal personen *</label>
+                    <input type="number" class="form-control small-input" id="personen" required min="1">
+                </div>
+    
+                <div class="offerte-form-group full-width">
+                    <label>Kies een formule *&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'formules' %}" target="_blank" rel="noopener noreferrer">Formule overzicht</a> <br></label>
+             
+                    <div class="offerte-form-check">
+                        <input class="form-check-input" type="radio" name="formule" value="8" required>
+                        <label>⭐Formule 1 (€8 p.p. - min. €395)</label>
+                    </div>
+                    <div class="offerte-form-check">
+                        <input class="form-check-input" type="radio" name="formule" value="9">
+                        <label>⭐⭐Formule 2 (€9 p.p. - min. €395)</label>
+                    </div>
+                    <div class="offerte-form-check">
+                        <input class="form-check-input" type="radio" name="formule" value="10.5">
+                        <label>⭐⭐⭐Luxe Formule (€10,50 p.p. - min. €450)</label>
+                    </div>
+                </div>
+    
+                <div class="offerte-form-group full-width">
+                    <label for="extra_info">Extra informatie of opmerkingen (Welke snacks, ....)<br><br> ** Snacks:
+Frikandel, Viandel, Boulet, Bami (vege), Kipcorn, Vleeskroket, Cervela, Mexicano, Kaaskroket</label>
+                    <textarea class="form-control" id="extra_info"></textarea>
+                </div>
+    
+                <div class="privacy-check full-width">
+                    <input type="checkbox" id="privacy_consent" required>
+                    <label for="privacy_consent">
+                        Ik ga akkoord met de verwerking van mijn persoonsgegevens zoals beschreven in de privacyverklaring. *
+                    </label>
+                </div>
+            </div>
+            <div id="offerteResultaat" class="offerte-resultaat">
+                <div class="price-header">Offerte</div>
+                <div class="total-price"></div>
+                <div class="price-note">Prijs is inclusief 12% BTW en transportkosten.</div>
+            </div>
+    <br>
+            <button type="submit" class="offerte-btn-primary">Bereken prijs</button>
+        </form>
+    
+        
+    </div>
+    
+    <br>
+
+    
+
+
+
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <!-- Company Info Section -->
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <a href="{% url 'index' %}" aria-label="Retro Snacks Home">
+                        <img src="{% get_media_prefix %}logo.png" alt="Retro Snacks Logo">
+                    </a>
+                </div>
+            </div>
+
+            <!-- Contact Information Section -->
+            <div class="footer-section">
+                <h3 class="footer-heading">Contact</h3>
+                <div class="footer-contact">
+                    <p><i class="fas fa-phone"></i> +32 468/04.50.34</p>
+                    <p><i class="fas fa-envelope"></i> <a href="mailto:info@retrosnacks.be">info@retrosnacks.be</a></p>
+                    <p><i class="fas fa-location-dot"></i> Keersvennen 6, 2440 Geel</p>
+                    <p><i class="fas fa-building"></i> Ondernemingsnummer: BE1016.537.531</p>
+                </div>
+            </div>
+
+            <!-- Social Media Section -->
+            <div class="footer-section">
+                <h3 class="footer-heading">Volg ons</h3>
+                <div class="social-icons-footer">
+                    <a href="https://www.facebook.com/profile.php?id=61554125164968" target="_blank" rel="noopener noreferrer" aria-label="Bezoek onze Facebook pagina">
+                        <i class="fa-brands fa-facebook"></i>
+                    </a>
+                    <a href="https://www.instagram.com/retro.snacks/" target="_blank" rel="noopener noreferrer" aria-label="Bezoek ons Instagram profiel">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <p class="footer-copyright">
+                &copy; 2025 Retro Snacks | Alle rechten voorbehouden
+            </p>
+            <div class="footer-links">
+                <a href="{% url 'voorwaarden' %}" class="footer-link">Algemene Voorwaarden</a>
+                <a href="{% url 'privacy' %}" class="footer-link">Privacybeleid</a>
+   
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+<!-- Owl Carousel JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+function openActiesPopup() {
+    document.getElementById('customActiesOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeActiesPopup() {
+    document.getElementById('customActiesOverlay').classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+// Sluit popup bij ESC toets
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeActiesPopup();
+    }
+});
+</script>
+<script>
+
+// Get the CSRF token from the cookie
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
+    // JavaScript om tijdinvoer af te ronden naar 15-minuten intervallen
+document.addEventListener('DOMContentLoaded', function() {
+    const tijdInput = document.getElementById('gewenste_tijd');
+    
+    tijdInput.addEventListener('change', function() {
+        const tijdWaarde = this.value;
+        
+        if (tijdWaarde) {
+            const [uren, minuten] = tijdWaarde.split(':').map(Number);
+            const afgerondeMinuten = Math.round(minuten / 15) * 15;
+            const correcteMinuten = afgerondeMinuten === 60 ? 0 : afgerondeMinuten;
+            let correcteUren = afgerondeMinuten === 60 ? uren + 1 : uren;
+            correcteUren = correcteUren % 24;
+            
+            const geformatteerdeUren = correcteUren.toString().padStart(2, '0');
+            const geformatteerdeMinuten = correcteMinuten.toString().padStart(2, '0');
+            this.value = `${geformatteerdeUren}:${geformatteerdeMinuten}`;
+        }
+    });
+});
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+     const form = document.getElementById("offerteForm");
+     if (form) {
+         const newForm = form.cloneNode(true);
+         form.parentNode.replaceChild(newForm, form);
+         newForm.addEventListener("submit", handleFormSubmit);
+     }
+ 
+     const tijdInput = document.getElementById("gewenste_tijd");
+     if (tijdInput) {
+         if (tijdInput.tagName.toLowerCase() === "input") {
+             tijdInput.type = "time";
+             tijdInput.step = "900";
+             if (!tijdInput.value) {
+                 tijdInput.value = "12:00";
+             }
+         }
+         else if (tijdInput.tagName.toLowerCase() === "select") {
+    tijdInput.innerHTML = "";
+    // Gewijzigd: nu van 0 tot 23 uur in plaats van 9 tot 23
+    for (let h = 0; h < 24; h++) {
+        for (let m = 0; m < 60; m += 15) {
+            const hour = h.toString().padStart(2, '0');
+            const minute = m.toString().padStart(2, '0');
+            const timeValue = `${hour}:${minute}`;
+            const option = document.createElement('option');
+            option.value = timeValue;
+            option.textContent = timeValue;
+            tijdInput.appendChild(option);
+        }
+    }
+}
+         
+         tijdInput.addEventListener('change', function() {
+             if (this.value) {
+                 this.value = convertTo24HourFormat(this.value);
+             }
+         });
+     }
+ 
+     const berekenPrijsBtn = document.querySelector("button.offerte-btn-primary");
+     if (berekenPrijsBtn) {
+         const origText = berekenPrijsBtn.textContent;
+         berekenPrijsBtn.innerHTML = `
+             <span class="button-content">${origText}</span>
+             <div class="spinner-container">
+                 <div class="spinner"></div>
+             </div>
+         `;
+     }
+ 
+     const style = document.createElement('style');
+     style.textContent = `
+         .price-breakdown {
+        margin: 15px 0;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        font-size: 14px;
+    }
+    .price-header {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+    .breakdown-item {
+        display: flex;
+        justify-content: space-between;
+        margin: 8px 0;
+        padding: 8px 0;
+        border-bottom: 1px solid #dee2e6;
+    }
+    .korting {
+        color: #28a745;
+    }
+    .breakdown-total {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 12px;
+        padding-top: 10px;
+        border-top: 2px solid #dee2e6;
+        font-weight: bold;
+        font-size: 16px;
+    }
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 15px;
+        width: 100%;
+    }
+    .button-container button, .button-container a {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        text-align: center;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .confirm-btn {
+        background-color: #28a745;
+        color: white;
+    }
+    .home-btn {
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+    }
+    .recalculate-btn {
+        background-color: #6c757d;
+        color: white;
+    }
+    input[type="time"] {
+        padding: 12px;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        font-size: 16px;
+        width: 100%;
+    }
+    .offerte-btn-primary, .confirm-btn, .home-btn {
+        position: relative;
+        overflow: hidden;
+    }
+    .button-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s;
+    }
+    .loading .button-content {
+        visibility: hidden;
+    }
+    .spinner-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: inherit;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    .loading .spinner-container {
+        opacity: 1;
+    }
+    .spinner {
+        width: 18px;
+        height: 18px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s infinite linear;
+    }
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    button:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+    
+    /* Mobile optimizations */
+    @media (max-width: 768px) {
+        .price-breakdown {
+            padding: 12px;
+        }
+        .breakdown-item {
+            flex-direction: column;
+            gap: 4px;
+        }
+        .breakdown-item span:last-child {
+            font-weight: 500;
+        }
+        .breakdown-total {
+            flex-direction: row;
+        }
+    }
+`;
+     document.head.appendChild(style);
+ });
+ 
+ function handleFormSubmit(event) {
+     event.preventDefault();
+     const submitBtn = event.target.querySelector("button.offerte-btn-primary");
+     submitBtn.classList.add('loading');
+     submitBtn.disabled = true;
+     setTimeout(function() {
+         handleSubmit(event);
+         submitBtn.classList.remove('loading');
+         submitBtn.disabled = false;
+     }, 700);
+ }
+ 
+ function convertTo24HourFormat(timeString) {
+     if (!timeString) return "";
+     if (timeString.toLowerCase() === "noon") return "12:00";
+     if (timeString.toLowerCase() === "midnight") return "00:00";
+     if (timeString.toLowerCase().includes("am") || timeString.toLowerCase().includes("pm")) {
+         try {
+             const isPM = timeString.toLowerCase().includes("pm");
+             let [hours, minutesPart] = timeString.toLowerCase()
+                 .replace("am", "").replace("pm", "")
+                 .trim().split(":");
+             hours = parseInt(hours);
+             let minutes = "00";
+             if (minutesPart) {
+                 minutes = minutesPart.split(" ")[0];
+             }
+             if (isPM && hours < 12) {
+                 hours += 12;
+             }
+             if (!isPM && hours === 12) {
+                 hours = 0;
+             }
+             return `${hours.toString().padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+         } catch (e) {
+             console.error("Fout bij conversie van tijd:", e);
+             return timeString;
+         }
+     }
+     if (timeString.match(/^\d{1,2}:\d{2}$/)) {
+         const [hours, minutes] = timeString.split(":");
+         return `${parseInt(hours).toString().padStart(2, '0')}:${minutes}`;
+     }
+     if (timeString.match(/^\d{1,2}$/)) {
+         return `${parseInt(timeString).toString().padStart(2, '0')}:00`;
+     }
+     return timeString;
+ }
+ 
+ async function handleSubmit(event) {
+    if (event) event.preventDefault();
+
+    let straat = document.getElementById("event_straat").value;
+    let gemeente = document.getElementById("event_gemeente").value;
+    let klantAdres = `${straat}, ${gemeente}, België`;
+    let startAdres = "Keersvennen 6, Geel, België";
+    let apiKey = "{{ openroute_api_key }}"; // Now using the context variable
+    
+    try {
+        let startResponse = await fetch(`https://api.openrouteservice.org/geocode/search?api_key=${apiKey}&text=${encodeURIComponent(startAdres)}`);
+        let startData = await startResponse.json();
+        if (!startData.features || !startData.features.length) {
+            alert("Startadres niet gevonden. Controleer het startadres.");
+            return;
+        }
+        let startCoords = startData.features[0].geometry.coordinates;
+
+        let klantResponse = await fetch(`https://api.openrouteservice.org/geocode/search?api_key=${apiKey}&text=${encodeURIComponent(klantAdres)}`);
+        let klantData = await klantResponse.json();
+        if (!klantData.features || !klantData.features.length) {
+            alert("Klantadres niet gevonden. Controleer of het correct is ingevuld (straat, gemeente).");
+            return;
+        }
+        let klantCoords = klantData.features[0].geometry.coordinates;
+
+        let directionsResponse = await fetch(
+            `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${startCoords[0]},${startCoords[1]}&end=${klantCoords[0]},${klantCoords[1]}`,
+            { headers: { 'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8' } }
+        );
+        let routeData = await directionsResponse.json();
+        if (!routeData.features || !routeData.features.length) {
+            alert("Kan geen route berekenen tussen de opgegeven adressen.");
+            return;
+        }
+
+        let enkeleAfstandKm = routeData.features[0].properties.segments[0].distance / 1000;
+        
+        // --- Aanpassing voor afronding ---
+        let afstand = parseFloat((enkeleAfstandKm * 2).toFixed(2));
+        let extraKosten = parseFloat((enkeleAfstandKm > 25 ? afstand * 1 : 0).toFixed(2)); // Stel 1 is de kostenfactor
+
+        let aantalPersonen = parseInt(document.getElementById("personen").value);
+        let formuleElement = document.querySelector('input[name="formule"]:checked');
+        if (!formuleElement) {
+            alert("Selecteer alstublieft een formule.");
+            return;
+        }
+        let formulePrijs = parseFloat(formuleElement.value);
+        let minPrijs = (formulePrijs === 10.5) ? 450 : 395; // Controleer of deze prijzen nog actueel zijn
+
+        let kortingPercentage = 0;
+        if (aantalPersonen >= 200) {
+            kortingPercentage = 1.00; // €1 per persoon
+        } else if (aantalPersonen >= 100) {
+            kortingPercentage = 0.50; // €0.50 per persoon
+        }
+        let korting = parseFloat((aantalPersonen * kortingPercentage).toFixed(2));
+        
+        let basisPrijsOnberekend = aantalPersonen * formulePrijs;
+        let basisPrijs = parseFloat(Math.max(basisPrijsOnberekend, minPrijs).toFixed(2));
+        let totaalPrijs = parseFloat((basisPrijs + extraKosten - korting).toFixed(2));
+        // --- Einde aanpassing voor afronding ---
+
+        const resultaatDiv = document.getElementById("offerteResultaat");
+        if (resultaatDiv) {
+            // ... (je bestaande HTML voor resultaatDiv, zorg dat de afgeronde waarden hier ook gebruikt worden)
+            // Bijvoorbeeld:
+            resultaatDiv.innerHTML = `
+                <div class="price-header">Prijssimulatie</div>
+                <div class="price-breakdown">
+                    <div class="breakdown-item">
+                        <span>Basis prijs (${aantalPersonen} personen x €${formulePrijs.toFixed(2)})</span>
+                        <span>€${basisPrijs.toFixed(2)}</span>
+                    </div>
+                    ${extraKosten > 0 ? `
+                    <div class="breakdown-item">
+                        <span>Transportkosten (${afstand.toFixed(1)} km)</span> 
+                        <span>+ €${extraKosten.toFixed(2)}</span>
+                    </div>
+                    ` : ''}
+                    ${korting > 0 ? `
+                    <div class="breakdown-item korting">
+                        <span>Groepskorting ${aantalPersonen >= 200 ? '(€1,00' : '(€0,50'} per persoon)</span>
+                        <span>- €${korting.toFixed(2)}</span>
+                    </div>
+                    ` : ''}
+                    <div class="breakdown-total">
+                        <span>Totaal incl. 12% BTW</span>
+                        <span>€${totaalPrijs.toFixed(2)}</span>
+                    </div>
+                </div>
+                <div class="button-container">
+                    <button type="button" class="confirm-btn" onclick="handleSaveOfferte()">
+                        <span class="button-content">Vraag beschikbaarheid</span>
+                        <div class="spinner-container"><div class="spinner"></div></div>
+                    </button>
+                    <br><br>
+                </div>`;
+        }
+
+        let eventStraat = document.getElementById("event_straat").value;
+        let eventNummer = document.getElementById("event_nummer").value;
+        let eventGemeente = document.getElementById("event_gemeente").value;
+        let eventAdres = `${eventStraat} ${eventNummer}, ${eventGemeente}`.trim();
+
+        let tijdInput = document.getElementById("gewenste_tijd");
+        let gewensteTijd = tijdInput.value;
+        
+        if (gewensteTijd) {
+            gewensteTijd = convertTo24HourFormat(gewensteTijd);
+        } else {
+            gewensteTijd = "12:00"; // Standaardwaarde indien leeg
+        }
+        
+        window.offerteData = {
+            naam_contactpersoon: document.getElementById("naam_contactpersoon").value,
+            naam_bedrijf: document.getElementById("naam_bedrijf").value || "",
+            email: document.getElementById("email").value,
+            aantal_personen: aantalPersonen,
+            straat: document.getElementById("straat").value, // Factuuradres straat
+            nummer: document.getElementById("nummer").value,   // Factuuradres nummer
+            gemeente: document.getElementById("gemeente").value, // Factuuradres gemeente
+            event_adres: eventAdres, // Samengesteld event adres
+            telefoon: document.getElementById("telefoon").value,
+            btw: document.getElementById("btw").value || "",
+            gewenste_datum: document.getElementById("gewenste_datum").value,
+            gewenste_tijd: gewensteTijd,
+            formule: formuleElement ? (formulePrijs === 10.5 ? "Luxe Formule" : (formulePrijs === 9 ? "Formule 2" : "Formule 1")) : "Onbekend", // Robuustere formule naam
+            extra_info: document.getElementById("extra_info").value,
+            // Gebruik de afgeronde waarden
+            afstand: afstand,
+            extra_kosten: extraKosten,
+            basis_prijs: basisPrijs,
+            totaal_prijs: totaalPrijs,
+            korting: korting
+        };
+        
+    } catch (error) {
+        console.error("Fout bij berekening in handleSubmit:", error);
+        alert("Er ging iets mis bij het berekenen van de prijs en route. Controleer de ingevoerde adressen.");
+        // Herstel eventueel de submit knop
+        const submitBtn = document.querySelector("button.offerte-btn-primary");
+        if (submitBtn) {
+            submitBtn.classList.remove('loading');
+            submitBtn.disabled = false;
+        }
+    }
+}
+ 
+async function handleSaveOfferte() {
+    const resultaatDiv = document.getElementById("offerteResultaat");
+    const bestaandePrijsBreakdownHTML = resultaatDiv.querySelector('.price-breakdown') ? resultaatDiv.querySelector('.price-breakdown').outerHTML : '<div class="price-breakdown"></div>'; // Zorg voor een fallback
+    const confirmBtn = resultaatDiv.querySelector('.confirm-btn');
+
+    if (confirmBtn) {
+        confirmBtn.classList.add('loading');
+        confirmBtn.disabled = true;
+    }
+
+    try {
+        console.log("Versturen van offerte data:", window.offerteData);
+        console.log("Tijd formaat check:", window.offerteData.gewenste_tijd);
+
+        const saveResponse = await fetch('/save_offerte/', { // Zorg dat de URL klopt
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify(window.offerteData)
+        });
+
+        // Probeer altijd de body te lezen, zelfs bij niet-ok responses voor meer info
+        const responseText = await saveResponse.text();
+        let saveResult;
+        try {
+            saveResult = JSON.parse(responseText);
+        } catch (parseError) {
+            console.error("Kon response niet als JSON parsen:", parseError);
+            console.error("Ruwe response:", responseText);
+            throw new Error(`Server gaf een onverwacht antwoord (status ${saveResponse.status}). Controleer de server logs.`);
+        }
+
+        if (!saveResponse.ok) {
+            // saveResult.error kan de validatiefouten bevatten als status 400 is
+            if (saveResponse.status === 400 && saveResult.errors) {
+                console.error("Validatiefouten:", saveResult.errors);
+                // Toon validatiefouten aan de gebruiker
+                let errorMessages = "Vul de volgende velden correct in: \n";
+                for (const field in saveResult.errors) {
+                    errorMessages += `- ${field}: ${saveResult.errors[field].map(e => e.message).join(', ')}\n`;
+                }
+                alert(errorMessages); // Simpele alert, idealiter integreer je dit mooier in je UI
+                // Update UI om fouten naast de velden te tonen of in een algemene error sectie
+                resultaatDiv.innerHTML = `
+                    ${bestaandePrijsBreakdownHTML}
+                    <div class="beschikbaarheid-bericht" style="color: red;">
+                        <p>De ingevulde gegevens zijn niet correct. Controleer de volgende punten:</p>
+                        <ul>
+                            ${Object.entries(saveResult.errors).map(([field, errors]) =>
+                                `<li><strong>${field.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}:</strong> ${errors.map(e => e.message).join(', ')}</li>`
+                            ).join('')}
+                        </ul>
+                    </div>
+                    <div class="button-container">
+                        <button type="button" class="confirm-btn" onclick="handleSaveOfferte()">
+                            <span class="button-content">Probeer opnieuw</span>
+                            <div class="spinner-container"><div class="spinner"></div></div>
+                        </button>
+                        <button type="button" class="recalculate-btn" onclick="location.reload()">Herbereken</button>
+                    </div>`;
+                return; // Stop verdere verwerking
+            }
+            // Andere serverfouten
+            throw new Error(saveResult.error || `Server error (${saveResponse.status})`);
+        }
+
+
+        if (!saveResult.success) {
+            throw new Error(saveResult.error || "Onbekende fout bij opslaan offerte");
+        }
+
+        // Succesvol opgeslagen
+        resultaatDiv.innerHTML = `
+            ${bestaandePrijsBreakdownHTML}
+            <div class="beschikbaarheid-bericht">
+                <br>
+                <p>Bedankt voor uw aanvraag! We brengen u binnen de 24 uur op de hoogte van de beschikbaarheid.</p>
+                <p>Controleer ook zeker uw map "ongewenste mails".</p>
+                
+                <br>
+                <a href="{% url 'index' %}" style="background-color: #007bff; color: white; text-decoration: none; padding: 12px; border-radius: 8px; width: 100%; font-size: 16px; font-weight: 500; text-align: center; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+                    <span class="button-content">Terug naar homepage</span>
+                </a>
+                <br><br>
+            </div>`;
+
+    } catch (error) {
+        console.error("Gedetailleerde fout in handleSaveOfferte:", error);
+        // Zorg dat bestaandePrijsBreakdownHTML altijd een string is
+        resultaatDiv.innerHTML = `
+            ${bestaandePrijsBreakdownHTML}
+            <div class="beschikbaarheid-bericht" style="color: red;">
+                <p>Er ging iets mis bij het verzenden van je aanvraag.</p>
+                <p>Detail: ${error.message}</p>
+                <p>Controleer je internetverbinding en probeer het opnieuw. Als het probleem aanhoudt, neem dan contact met ons op.</p>
+            </div>
+            <div class="button-container">
+                 <button type="button" class="confirm-btn" onclick="handleSaveOfferte()">
+                    <span class="button-content">Probeer opnieuw</span>
+                    <div class="spinner-container"><div class="spinner"></div></div>
+                </button>
+                <button type="button" class="recalculate-btn" onclick="location.reload()">Herbereken</button>
+            </div>`;
+    } finally {
+        if (confirmBtn) {
+            confirmBtn.classList.remove('loading');
+            confirmBtn.disabled = false;
+        }
+    }
+}
+
+</script>
+ </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const navbar = document.querySelector(".navbar");
+            const toggler = document.querySelector(".navbar-toggler");
+        
+            // Toevoegen van zwarte achtergrond bij openen van menu
+            toggler.addEventListener("click", function () {
+                if (!navbar.classList.contains("navbar-expanded")) {
+                    navbar.classList.add("navbar-expanded");
+                } else {
+                    navbar.classList.remove("navbar-expanded");
+                }
+            });
+        
+            // Zwarte achtergrond behouden bij scrollen
+            window.addEventListener("scroll", function () {
+                if (window.scrollY > 50) {
+                    navbar.classList.add("scrolled");
+                } else if (!document.querySelector(".navbar-collapse.show")) {
+                    navbar.classList.remove("scrolled");
+                }
+            });
+        
+            // Sluit het menu en verwijder de zwarte navbar bij klikken buiten het menu
+            document.addEventListener("click", function (event) {
+                if (!navbar.contains(event.target) && !toggler.contains(event.target)) {
+                    navbar.classList.remove("navbar-expanded");
+                }
+            });
+        });
+        </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Retro Snacks</title>
+    <!-- favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <!-- Android/Chrome -->
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'android-chrome-192x192.png' %}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{% static 'android-chrome-512x512.png' %}">
+    <!-- Iphone -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon-180x180.png' %}">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Owl Carousel CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    
+    <!-- Eigen CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <style>
+
+
+    </style>
+</head>
+
+<body>
+{% load static %}
+    <!-- ✅ Navbar -->
+    <nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <a class="d-lg-none mobile-offerte-btn ms-1" href="{% url 'offerte' %}">
+            <i class="fas fa-file-invoice"></i> Offerte
+        </a>
+        
+        {% if acties %}
+        <button class="d-lg-none mobile-acties-btn ms-1" onclick="openActiesPopup()">
+            <i class="fas fa-tags"></i> Acties
+        </button>
+        {% endif %}
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item {% if request.resolver_match.url_name == 'offerte' %}active{% endif %}">
+                    <a class="nav-link btn btn-offerte" href="{% url 'offerte' %}">
+                        <i class="fas fa-file-invoice"></i> Offerte
+                    </a>
+                </li>
+                {% if acties %}
+                <li class="nav-item d-none d-lg-block">
+                    <button class="nav-link btn btn-acties" onclick="openActiesPopup()">
+                        <i class="fas fa-tags"></i> Acties
+                    </button>
+                </li>
+                {% endif %}
+                <li class="nav-item {% if request.resolver_match.url_name == 'index' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'index' %}">Home</a>
+                </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'formules' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'formules' %}">Formules</a>
+                </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'event' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'event' %}">Groot.event</a>
+                </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'contact' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/#afbeeldingen-sectie">Foto's</a>
+                </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'SnacksSauzen' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'SnacksSauzen' %}">Snacks&Sauzen</a>
+                </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'faq' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'faq' %}">FAQ</a>
+                </li>
+            </ul>
+
+            <div class="social-icons ms-3">
+                <a href="https://www.facebook.com/profile.php?id=61554125164968" target="_blank"><i class="fa-brands fa-facebook fa-2x"></i></a>
+                <a href="https://www.instagram.com/retro.snacks/" target="_blank"><i class="fa-brands fa-instagram fa-2x"></i></a>
+                <a href="https://g.co/kgs/83aKXqU" target="_blank">
+                    <img src="/media/google.PNG" alt="Google Reviews" class="google-review-navbar">
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+<!-- ✅ Hero Section -->
+<div class="hero d-flex flex-column align-items-center text-center">
+    
+    <h1>Retro Snacks</h1>
+    <p>Wij brengen smaakvolle momenten naar jouw evenement.</p>
+</div>
+
+<br>
+<div class="container text-center my-5">
+    <h2 class="lijst-tittel intro-text">Privacybeleid van RetroSnacks</h2>
+    <hr class="retro-line">
+</div>
+<br>
+
+<div class="privacy-container">
+    <p class="privacy-text">Dit privacybeleid beschrijft hoe RetroSnacks uw persoonlijke gegevens verzamelt, gebruikt en beschermt.</p>
+    
+    <div class="privacy-section">
+        <h2>1. Gegevens die wij verzamelen</h2>
+        <p class="privacy-text">Wij kunnen de volgende gegevens verzamelen:</p>
+        <ul class="privacy-list">
+            <li>Naam en contactgegevens (zoals e-mailadres en telefoonnummer)</li>
+            <li>IP-adres en browsergegevens</li>
+            <li>Feedback of communicatie met ons</li>
+        </ul>
+    </div>
+
+    <div class="privacy-section">
+        <h2>2. Hoe wij uw gegevens gebruiken</h2>
+        <p class="privacy-text">Wij gebruiken uw gegevens voor:</p>
+        <ul class="privacy-list">
+            <li>Het verwerken van bestellingen en betalingen</li>
+            <li>Klantenservice en ondersteuning</li>
+            <li>Het verbeteren van onze website en diensten</li>
+        </ul>
+    </div>
+
+    <div class="privacy-section">
+        <h2>3. Hoe wij uw gegevens beschermen</h2>
+        <p class="privacy-text">Wij nemen passende technische en organisatorische maatregelen om uw persoonsgegevens te beschermen tegen ongeautoriseerde toegang, verlies of misbruik.</p>
+    </div>
+    
+    <div class="privacy-section">
+        <h2>4. Delen van gegevens</h2>
+        <p class="privacy-text">Wij delen uw gegevens alleen met derde partijen als dit nodig is voor onze dienstverlening, zoals betalingsproviders. Wij verkopen geen gegevens aan derden.</p>
+    </div>
+    
+    <div class="privacy-section">
+        <h2>5. Uw rechten</h2>
+        <p class="privacy-text">U heeft het recht om:</p>
+        <ul class="privacy-list">
+            <li>Uw gegevens in te zien, te corrigeren of te verwijderen</li>
+            <li>Bezwaar te maken tegen gegevensverwerking</li>
+            <li>Uw toestemming in te trekken</li>
+        </ul>
+        <p class="privacy-text">Neem contact met ons op via <span class="privacy-contact">info@retrosnacks.be</span> als u van uw rechten gebruik wilt maken.</p>
+    </div>
+    
+    <div class="privacy-section">
+        <h2>6. Cookies</h2>
+        <p class="privacy-text">Onze website gebruikt cookies om de gebruikerservaring te verbeteren. U kunt cookies uitschakelen in uw browserinstellingen.</p>
+    </div>
+    
+    <div class="privacy-section">
+        <h2>7. Wijzigingen in dit beleid</h2>
+        <p class="privacy-text">Wij kunnen dit privacybeleid van tijd tot tijd wijzigen. De laatste update was op <strong>[01/06/2025]</strong>.</p>
+    </div>
+    
+    <div class="privacy-section">
+        <h2>8. Contactgegevens</h2>
+        <p class="privacy-text">Voor vragen over dit privacybeleid kunt u contact opnemen met:</p>
+        <p class="privacy-text"><strong>RetroSnacks</strong><br>
+        Adres: Keersvennen 6, 2440 Geel<br>
+        E-mail: <span class="privacy-contact">info@retrosnacks.be</span><br>
+        Telefoon: +32 468/04.50.34</p>
+    </div>
+</div>
+
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <!-- Company Info Section -->
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <a href="{% url 'index' %}" aria-label="Retro Snacks Home">
+                        <img src="{% get_media_prefix %}logo.png" alt="Retro Snacks Logo">
+                    </a>
+                </div>
+            </div>
+
+            <!-- Contact Information Section -->
+            <div class="footer-section">
+                <h3 class="footer-heading">Contact</h3>
+                <div class="footer-contact">
+                    <p><i class="fas fa-phone"></i> +32 468/04.50.34</p>
+                    <p><i class="fas fa-envelope"></i> <a href="mailto:info@retrosnacks.be">info@retrosnacks.be</a></p>
+                    <p><i class="fas fa-location-dot"></i> Keersvennen 6, 2440 Geel</p>
+                    <p><i class="fas fa-building"></i> Ondernemingsnummer: BE1016.537.531</p>
+                </div>
+            </div>
+
+            <!-- Social Media Section -->
+            <div class="footer-section">
+                <h3 class="footer-heading">Volg ons</h3>
+                <div class="social-icons-footer">
+                    <a href="https://www.facebook.com/profile.php?id=61554125164968" target="_blank" rel="noopener noreferrer" aria-label="Bezoek onze Facebook pagina">
+                        <i class="fa-brands fa-facebook"></i>
+                    </a>
+                    <a href="https://www.instagram.com/retro.snacks/" target="_blank" rel="noopener noreferrer" aria-label="Bezoek ons Instagram profiel">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <p class="footer-copyright">
+                &copy; 2025 Retro Snacks | Alle rechten voorbehouden
+            </p>
+            <div class="footer-links">
+                <a href="{% url 'voorwaarden' %}" class="footer-link">Algemene Voorwaarden</a>
+                <a href="{% url 'privacy' %}" class="footer-link">Privacybeleid</a>
+               
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

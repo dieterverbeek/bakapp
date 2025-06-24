@@ -1,0 +1,435 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - RetroSnacks</title>
+    <!-- favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <!-- Android/Chrome -->
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'android-chrome-192x192.png' %}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{% static 'android-chrome-512x512.png' %}">
+    <!-- Iphone -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon-180x180.png' %}">
+    <!-- Bootstrap CSS via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- Eigen CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+     :root {
+            --primary-color: #4d772b;
+            --primary-hover: #0a4a9e;
+            --secondary-color: #b4b0a7;
+            --accent-color: #b88f53;
+            --text-dark: #333;
+            --text-light: #6c757d;
+            --white: #fff;
+            --light-bg: #f8f9fa;
+            --border-color: #dee2e6;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --radius: 10px;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #b7bbbecb;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .dashboard-header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+        .dashboard-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .dashboard-nav {
+            display: flex;
+            gap: 15px;
+        }
+        .dashboard-nav a {
+            color: var(--white);
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: var(--radius);
+            transition: background-color 0.2s;
+        }
+        .dashboard-nav a:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+        .dashboard-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .offerte-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .offerte-header {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .offerte-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .offerte-item {
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            border-bottom: 1px solid #f1f1f1;
+            transition: background-color 0.3s ease;
+        }
+        .offerte-item:hover {
+            background-color: #f9f9f9;
+        }
+        .offerte-item.header {
+            background-color: #ecf0f1;
+            font-weight: bold;
+            color: #2c3e50;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        .offerte-data {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .offerte-field {
+            color: #34495e;
+            flex: 1;
+            padding: 0 10px;
+            text-align: left;
+        }
+        .offerte-field.naam {
+            font-weight: bold;
+            color: #2980b9;
+            flex-basis: 20%;
+            min-width: 150px;
+        }
+        .offerte-field.event-adres {
+            flex-basis: 25%;
+            min-width: 200px;
+        }
+        .offerte-field.aantal-personen {
+            flex-basis: 15%;
+            min-width: 120px;
+            text-align: center;
+        }
+        .offerte-field.datum {
+            flex-basis: 15%;
+            min-width: 120px;
+            text-align: center;
+        }
+        .offerte-field.tijd {
+            flex-basis: 10%;
+            min-width: 100px;
+            text-align: center;
+        }
+        .offerte-field.status {
+            flex-basis: 10%;
+            min-width: 100px;
+            text-align: center;
+        }
+        .offerte-actions {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            padding: 10px 0;
+            border-top: 1px solid #f1f1f1;
+            margin-top: 10px;
+        }
+        .offerte-actions button, .offerte-actions a {
+            margin: 0 5px;
+        }
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        .btn-email {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-email:hover {
+            background-color: #2980b9;
+        }
+        .btn-details {
+            background-color: #f39c12;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-details:hover {
+            background-color: #e67e22;
+        }
+        .btn-danger {
+            background-color: #c0392b;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-danger:hover {
+            background-color: #a93226;
+        }
+        .btn-success {
+            background-color: #27ae60;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-success:hover {
+            background-color: #219653;
+        }
+        .btn-primary {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        .modal-content {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+        }
+        .modal-content h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .modal-content p {
+            margin: 5px 0;
+            color: #34495e;
+        }
+
+        /* Responsieve aanpassingen voor kleine schermen */
+        @media (max-width: 768px) {
+            body {
+        padding: 10px;
+    }
+    
+    .container {
+        padding: 0;
+        margin: 1rem auto;
+    }
+    
+    .dashboard-header {
+        flex-direction: column;
+        padding: 10px;
+        text-align: center;
+    }
+    
+    .dashboard-header h1 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+    
+    .dashboard-nav {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+        width: 100%;
+    }
+    
+    .dashboard-nav a {
+        padding: 8px 5px;
+        font-size: 0.85rem;
+        text-align: center;
+    }
+            .offerte-container {
+                margin: 10px;
+                padding: 15px;
+            }
+            .offerte-header {
+                font-size: 22px;
+            }
+            .offerte-data {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .offerte-field {
+                flex-basis: 100%;
+                min-width: 0;
+                padding: 5px 0;
+                text-align: left;
+            }
+            .offerte-field.naam {
+                font-size: 16px;
+            }
+            .offerte-field.aantal-personen,
+            .offerte-field.datum,
+            .offerte-field.tijd,
+            .offerte-field.status {
+                text-align: left;
+            }
+            .offerte-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            .offerte-actions button, .offerte-actions a {
+                width: 80%;
+                margin: 5px 0;
+                padding: 8px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+        <h1>RetroSnacks Dashboard</h1>
+        <nav class="dashboard-nav">
+            <a href="{% url 'dashboard' %}"><i class="bi bi-house-door me-1"></i></a>
+            <a href="{% url 'offertes' %}">Offertes</a>
+            <a href="{% url 'geplande_feesten' %}">Geplande events</a>
+            <a href="{% url 'klanten' %}">Klanten</a>
+            <a href="{% url 'facturen' %}">Facturen</a>
+            <a href="{% url 'logout' %}">Uitloggen</a>
+        </nav>
+    </header>
+
+    <br>
+    <br>
+    
+
+
+    <div class="offerte-container">
+        <h1 class="offerte-header">Offerte Aanpassen</h1>
+        
+        {% if offerte %}
+            <form method="POST" action="{% url 'offerte_aanpassen' offerte.id %}">
+                {% csrf_token %}
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="naam">Naam contactpersoon</label>
+                        <input type="text" class="form-control" id="naam" name="naam" value="{{ offerte.naam_contactpersoon }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="naam_bedrijf">Naam bedrijf</label>
+                        <input type="text" class="form-control" id="naam_bedrijf" name="naam_bedrijf" value="{{ offerte.naam_bedrijf|default_if_none:'' }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ offerte.email }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefoon">Telefoon</label>
+                        <input type="text" class="form-control" id="telefoon" name="telefoon" value="{{ offerte.telefoon }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="straat">Straat</label>
+                        <input type="text" class="form-control" id="straat" name="straat" value="{{ offerte.straat }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nummer">Nummer</label>
+                        <input type="text" class="form-control" id="nummer" name="nummer" value="{{ offerte.nummer }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="gemeente">Gemeente</label>
+                        <input type="text" class="form-control" id="gemeente" name="gemeente" value="{{ offerte.gemeente }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="aantal_personen">Aantal Personen</label>
+                        <input type="number" class="form-control" id="aantal_personen" name="aantal_personen" value="{{ offerte.aantal_personen }}" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="gewenste_datum">Gewenste Datum</label>
+                        <input type="date" class="form-control" id="gewenste_datum" name="gewenste_datum" value="{{ offerte.gewenste_datum|date:'Y-m-d' }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="gewenste_tijd">Gewenste Tijd</label>
+                        <input type="time" class="form-control" id="gewenste_tijd" name="gewenste_tijd" value="{{ offerte.gewenste_tijd }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="btw_nummer">BTW Nummer</label>
+                        <input type="text" class="form-control" id="btw_nummer" name="btw_nummer" value="{{ offerte.btw_nummer|default_if_none:'' }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="formule">Formule</label>
+                        <input type="text" class="form-control" id="formule" name="formule" value="{{ offerte.formule }}" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="event_adres">Event Adres</label>
+                        <input type="text" class="form-control" id="event_adres" name="event_adres" value="{{ offerte.event_adres }}" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="extra_info">Extra Informatie</label>
+                        <textarea class="form-control" id="extra_info" name="extra_info">{{ offerte.extra_info|default_if_none:'' }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="afstand">Afstand (km)</label>
+                        <input type="number" step="0.1" class="form-control" id="afstand" name="afstand" value="{{ offerte.afstand }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="extra_kosten">Extra Kosten (€)</label>
+                        <input type="number" step="0.01" class="form-control" id="extra_kosten" name="extra_kosten" value="{{ offerte.extra_kosten }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="basis_prijs">Basis Prijs (€)</label>
+                        <input type="number" step="0.01" class="form-control" id="basis_prijs" name="basis_prijs" value="{{ offerte.basis_prijs }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="korting">Korting (€)</label>
+                        <input type="number" step="0.01" class="form-control" id="korting" name="korting" value="{{ offerte.korting }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="totaal_prijs">Totaal Prijs (€)</label>
+                        <input type="number" step="0.01" class="form-control" id="totaal_prijs" name="totaal_prijs" value="{{ offerte.totaal_prijs }}" required>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Opslaan</button>
+                    <a href="{% url 'offertes_overzicht' %}" class="btn btn-secondary">Terug</a>
+                </div>
+            </form>
+        {% else %}
+            <p>Offerte niet gevonden.</p>
+            <div class="form-actions">
+                <a href="{% url 'offertes_overzicht' %}" class="btn btn-secondary">Terug naar overzicht</a>
+            </div>
+        {% endif %}
+    </div>
+
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    
+</body>
+</html>

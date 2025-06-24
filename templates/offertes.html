@@ -1,0 +1,1231 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - RetroSnacks</title>
+    <!-- favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <!-- Android/Chrome -->
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'android-chrome-192x192.png' %}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{% static 'android-chrome-512x512.png' %}">
+    <!-- Iphone -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon-180x180.png' %}">
+    <!-- Bootstrap CSS via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Eigen CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4d772b;
+            --primary-hover: #0a4a9e;
+            --secondary-color: #b4b0a7;
+            --accent-color: #b88f53;
+            --text-dark: #333;
+            --text-light: #6c757d;
+            --white: #fff;
+            --light-bg: #f8f9fa;
+            --border-color: #dee2e6;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --radius: 10px;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #b7bbbecb;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .dashboard-header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+        .dashboard-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .dashboard-nav {
+            display: flex;
+            gap: 15px;
+        }
+        .dashboard-nav a {
+            color: var(--white);
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: var(--radius);
+            transition: background-color 0.2s;
+        }
+        .dashboard-nav a:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+        .dashboard-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .offerte-container {
+    max-width: 1600px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Original alignment for Naam & E-mail */
+.offerte-field.naam, 
+.offerte-field.event-adres {
+    justify-content: flex-start; /* Already left-aligned by default */
+    text-align: left;
+}
+
+/* Aangepaste uitlijning voor de rest */
+.offerte-field.aantal-personen {
+    justify-content: flex-start !important;
+    text-align: left !important;
+    padding-left: 0;
+}
+
+.offerte-field.datum {
+    justify-content: flex-start !important;
+    text-align: left !important;
+    padding-left: 0;
+}
+
+.offerte-field.tijd {
+    justify-content: flex-start !important;
+    text-align: left !important;
+    padding-left: 0;
+}
+
+/* Status rij naar rechts uitlijnen */
+.offerte-field.status {
+    justify-content: flex-end !important; /* Zet status naar rechts */
+    text-align: right !important;         /* Tekst uitlijnen naar rechts */
+    padding-right: 15px;                  /* Wat ruimte aan de rechterkant toevoegen */
+}
+
+.offerte-header {
+    font-size: 28px;
+    color: #2c3e50;
+    margin-bottom: 25px;
+    text-align: center;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.offerte-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.offerte-item {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    border-bottom: 1px solid #f1f1f1;
+    transition: background-color 0.3s ease;
+}
+
+.offerte-item:hover {
+    background-color: #f9f9f9;
+}
+
+.offerte-item.header {
+    background-color: #ecf0f1;
+    font-weight: bold;
+    color: #2c3e50;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.container {
+    max-width: 1300px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+.offerte-data {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.offerte-field {
+    color: #34495e;
+    flex: 1;
+    padding: 0 10px;
+    text-align: left;
+}
+
+.offerte-field.naam {
+    font-weight: bold;
+    color: #2980b9;
+    flex-basis: 20%;
+    min-width: 150px;
+}
+
+.offerte-field.event-adres {
+    flex-basis: 25%;
+    min-width: 200px;
+}
+
+.offerte-field.aantal-personen {
+    flex-basis: 15%;
+    min-width: 120px;
+}
+
+.offerte-field.datum {
+    flex-basis: 15%;
+    min-width: 120px;
+}
+
+.offerte-field.tijd {
+    flex-basis: 10%;
+    min-width: 100px;
+}
+
+.offerte-field.status {
+    flex-basis: 10%;
+    min-width: 100px;
+}
+
+.offerte-actions {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 10px 0;
+    border-top: 1px solid #f1f1f1;
+    margin-top: 10px;
+}
+
+.offerte-actions button, .offerte-actions a {
+    margin: 0 5px;
+}
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        .btn-email {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-email:hover {
+            background-color: #2980b9;
+        }
+        .btn-details {
+            background-color: #f39c12;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-details:hover {
+            background-color: #e67e22;
+        }
+        .btn-danger {
+            background-color: #c0392b;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-danger:hover {
+            background-color: #a93226;
+        }
+        .btn-success {
+            background-color: #27ae60;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-success:hover {
+            background-color: #219653;
+        }
+        .btn-primary {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        .modal-content {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+        }
+        .modal-content h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .modal-content p {
+            margin: 5px 0;
+            color: #34495e;
+        }
+
+
+      
+ 
+
+/* Verbeterde responsieve aanpassingen voor kleine schermen */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        padding: 0;
+        margin: 1rem auto;
+    }
+    
+    .dashboard-header {
+        flex-direction: column;
+        padding: 10px;
+        text-align: center;
+    }
+    
+    .dashboard-header h1 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+    
+    .dashboard-nav {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+        width: 100%;
+    }
+    
+    .dashboard-nav a {
+        padding: 8px 5px;
+        font-size: 0.85rem;
+        text-align: center;
+    }
+    
+    .offerte-container {
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 8px;
+    }
+    
+    .offerte-header {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+    
+    .offerte-item {
+        padding: 10px;
+    }
+    
+    .offerte-data {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .offerte-field {
+        padding: 3px 0;
+        width: 100%;
+    }
+    
+    /* Specifieke styling voor de velden */
+    .offerte-field.naam {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #2980b9;
+    }
+    
+    .offerte-field.event-adres,
+    .offerte-field.datum,
+    .offerte-field.tijd,
+    .offerte-field.status {
+        font-size: 0.9rem;
+        text-align: left;
+    }
+    
+    /* Speciale aanpassing voor aantal-personen met "personen" tekst */
+    .offerte-field.aantal-personen {
+        font-size: 0.9rem;
+        text-align: left;
+    }
+    
+    .offerte-field.aantal-personen::after {
+        content: " personen";
+    }
+    
+    .offerte-item.header {
+        display: none; /* Verberg de header rij op mobiel */
+    }
+    
+    .offerte-actions {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px 0;
+    }
+    
+    .action-group, .status-actions {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+        width: 100%;
+    }
+    
+    .offerte-actions button, 
+    .offerte-actions a {
+        width: 100%;
+        margin: 0;
+        padding: 8px 5px;
+        font-size: 0.8rem;
+    }
+    
+    .btn-sm {
+        padding: 6px;
+    }
+    
+    .search-bar {
+        padding: 8px 10px;
+    }
+    
+    #search-input {
+        font-size: 0.9rem;
+    }
+    
+    .search-icon {
+        font-size: 1rem;
+    }
+    
+    .add-offerte-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 20px;
+    }
+    
+    .modal-content {
+        padding: 15px;
+    }
+    
+    .modal-body p {
+        font-size: 0.9rem;
+        margin: 3px 0;
+    }
+}
+
+
+
+
+        .offerte-header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.add-offerte-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.add-offerte-btn:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.search-container {
+    margin: 1px 0;
+    width: 100%;
+}
+
+.search-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    padding: 10px 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.search-bar:focus-within {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    background-color: #ffffff;
+}
+
+.search-icon {
+    color: #555;
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+
+#search-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 1rem;
+    color: #333;
+    padding: 5px 0;
+    outline: none;
+}
+
+#clearSearch {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+#clearSearch:hover {
+    background-color: #e0e0e0;
+    color: #555;
+}
+
+.geen-resultaten {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-style: italic;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+    </style>
+</head>
+<body>
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+        <h1>RetroSnacks Dashboard</h1>
+        <nav class="dashboard-nav">
+            <a href="{% url 'dashboard' %}"><i class="bi bi-house-door me-1"></i></a>
+            <a href="{% url 'offertes' %}">Offertes</a>
+            <a href="{% url 'geplande_feesten' %}">Geplande events</a>
+            <a href="{% url 'klanten' %}">Klanten</a>
+            <a href="{% url 'facturen' %}">Facturen</a>
+            <a href="{% url 'logout' %}">Uitloggen</a>
+        </nav>
+    </header>
+
+    <!-- CSRF Token voor POST verzoeken -->
+    {% csrf_token %}
+
+   <br>
+   <div class="container">
+    <div class="header">
+        <h1>Aanvragen</h1>
+    </div>
+   <div class="offerte-container">
+    
+    <!-- Zoekbalk eerst (bovenaan) -->
+    <div class="search-container">
+        <div class="search-bar">
+            <ion-icon name="search-outline" class="search-icon"></ion-icon>
+            <input type="text" id="search-input" placeholder="Zoeken op naam, e-mail, adres...">
+            <button id="clearSearch" onclick="clearSearch()">
+                <ion-icon name="close-outline"></ion-icon>
+            </button>
+        </div>
+    </div>
+    </div>
+
+    <div class="offerte-container">
+        <div class="offerte-header-container">
+        </div>
+        <div class="d-flex justify-content-between align-items-center page-title-container">
+            <a href="{% url 'zelf_offerte' %}" class="add-offerte-btn" title="Nieuwe offerte toevoegen">+</a>
+            <br><br><br>
+        </div>
+   
+        
+      
+   
+        <div class="offerte-list-container">
+            <ul class="offerte-list">
+                <li class="offerte-item header">
+                    <div class="offerte-data">
+                        <span class="offerte-field naam">Naam Contact/Bedrijf</span>
+                        <span class="offerte-field event-adres">E-mail</span>
+                        <span class="offerte-field aantal-personen">Aantal Personen</span>
+                        <span class="offerte-field datum">Gewenste Datum</span>
+                        <span class="offerte-field tijd">Start-tijd en Adres</span>
+                        <span class="offerte-field status">Status</span>
+                    </div>
+                </li>
+   
+                {% for offerte in offertes %}
+                    <li class="offerte-item">
+                        <div class="offerte-data">
+                            <span class="offerte-field naam">
+                                {{ offerte.naam_contactpersoon }}<br>{{ offerte.naam_bedrijf|default:'' }}
+                            </span>
+                            <span class="offerte-field event-adres">{{ offerte.email }}</span>
+                            <span class="offerte-field aantal-personen">{{ offerte.aantal_personen }}</span>
+                            <span class="offerte-field datum">{{ offerte.gewenste_datum }}</span>
+                            <span class="offerte-field tijd">{{ offerte.gewenste_tijd|time:"H:i" }}<br>{{ offerte.event_adres|default:"Niet opgegeven" }}</span>
+                            <span class="offerte-field status">{{ offerte.is_bevestigd }}</span>
+                        </div>
+                        <div class="offerte-actions">
+                            <div class="action-group">
+                                <button class="btn btn-email btn-sm" data-email="{{ offerte.email }}" title="E-mail sturen">
+                                    <i class="bi bi-envelope"></i>
+                                </button>
+                                <button class="btn btn-details btn-sm" data-offerte-id="{{ offerte.id }}" title="Details bekijken" data-bs-toggle="modal" data-bs-target="#offerteModal-{{ offerte.id }}">
+                                    <i class="bi bi-info-circle"></i>
+                                </button>
+                                <button class="btn btn-danger btn-sm delete-offerte-btn" data-offerte-id="{{ offerte.id }}" title="Verwijderen">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                                <button class="btn btn-success btn-sm export-offerte-docx-btn" data-offerte-id="{{ offerte.id }}" title="Exporteren als DOCX">
+                                    <i class="bi bi-journal-text"></i>
+                                </button>
+                                <a href="{% url 'offerte_aanpassen' offerte.id %}" class="btn btn-primary btn-sm" title="Offerte aanpassen">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </div>
+   
+                            <div class="status-actions">
+                                <button class="btn btn-danger btn-sm afwijzen-btn" data-offerte-id="{{ offerte.id }}" title="Afwijzen">Afwijzen</button>
+                                <button class="btn btn-success btn-sm btn-bevestigen" data-offerte-id="{{ offerte.id }}" title="Datum/event Bevestigen">Bevestigen</button>
+                                <button class="btn btn-success btn-sm btn-vastleggen" data-offerte-id="{{ offerte.id }}" title="Event vastleggen"><i class="bi bi-check-lg"></i></button>
+                            </div>
+                        </div>
+   
+                        <div class="modal fade" id="offerteModal-{{ offerte.id }}" tabindex="-1" aria-labelledby="offerteModalLabel-{{ offerte.id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="modal-title">Offerte Details</h3>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><strong>Naam contactpersoon:</strong> {{ offerte.naam_contactpersoon }}</p>
+                                        <p><strong>Naam Bedrijf:</strong> {{ offerte.naam_bedrijf|default:"Niet opgegeven" }}</p>
+                                        <p><strong>Email:</strong> {{ offerte.email }}</p>
+                                        <p><strong>Telefoon:</strong> {{ offerte.telefoon }}</p>
+                                        <p><strong>BTW nummer:</strong> {{ offerte.btw_nummer }}</p>
+                                        <p><strong>Aantal Personen:</strong> {{ offerte.aantal_personen }}</p>
+                                        <p><strong>Adres:</strong> {{ offerte.straat }} {{ offerte.nummer }}, {{ offerte.gemeente }}</p>
+                                        <p><strong>Event Adres:</strong> {{ offerte.event_adres|default:"Niet opgegeven" }}</p>
+                                        <p><strong>Gewenste Datum:</strong> {{ offerte.gewenste_datum }}</p>
+                                        <p><strong>Gewenste Tijd:</strong> {{ offerte.gewenste_tijd|time:"H:i" }}</p>
+                                        <p><strong>Formule:</strong> {{ offerte.formule }}</p>
+                                        <p><strong>Status:</strong> {{ offerte.is_bevestigd }}</p>
+                                        <p><strong>Totaal Prijs:</strong> €{{ offerte.totaal_prijs }}</p>
+                                        <p><strong>Extra:</strong> {{ offerte.extra_info }}</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sluiten</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                {% empty %}
+                    <li class="offerte-item">
+                        <div class="offerte-data">Geen offertes beschikbaar.</div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search-input');
+            const offerteItems = document.querySelectorAll('.offerte-item:not(.header)');
+            
+            // Search function that filters items based on search term
+            function filterItems() {
+                const searchTerm = searchInput.value.toLowerCase();
+                let hasResults = false;
+                
+                offerteItems.forEach(item => {
+                    const naam = item.querySelector('.naam').textContent.toLowerCase();
+                    const email = item.querySelector('.event-adres').textContent.toLowerCase();
+                    const adresElementen = item.querySelectorAll('.tijd');
+                    let adres = '';
+                    if (adresElementen.length > 0) {
+                        adres = Array.from(adresElementen).map(el => el.textContent.toLowerCase()).join(' ');
+                    }
+        
+                    if (naam.includes(searchTerm) || email.includes(searchTerm) || adres.includes(searchTerm)) {
+                        item.style.display = '';
+                        hasResults = true;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+                
+                // Check if we need to show "geen resultaten" message
+                let noResultsMsg = document.querySelector('.geen-resultaten');
+                if (!hasResults && searchTerm !== '') {
+                    if (!noResultsMsg) {
+                        noResultsMsg = document.createElement('div');
+                        noResultsMsg.className = 'geen-resultaten';
+                        noResultsMsg.textContent = 'Geen resultaten gevonden';
+                        document.querySelector('.search-container').insertAdjacentElement('afterend', noResultsMsg);
+                    }
+                } else if (noResultsMsg) {
+                    noResultsMsg.remove();
+                }
+            }
+            
+            // Add input event listener
+            searchInput.addEventListener('input', filterItems);
+            
+            // Clear search function
+            window.clearSearch = function() {
+                searchInput.value = '';
+                filterItems();
+                searchInput.focus();
+            };
+            
+            // Make the function available for the onkeyup attribute
+            window.zoekItems = filterItems;
+        });
+        </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+        // Gecombineerde JavaScript-functionaliteit
+        document.addEventListener('DOMContentLoaded', function () {
+            // Verwijderen
+            document.querySelectorAll('.delete-offerte-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const offerteId = this.getAttribute('data-offerte-id');
+                    deleteOfferte(offerteId);
+                });
+            });
+
+            function deleteOfferte(offerteId) {
+                if (confirm("Weet je zeker dat je deze offerte wilt verwijderen?")) {
+                    fetch("{% url 'delete_offerte' %}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": "{{ csrf_token }}"
+                        },
+                        body: JSON.stringify({
+                            offerte_id: offerteId
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert("Er is een fout opgetreden: " + data.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                    });
+                }
+            }
+
+            // Exporteren naar DOCX
+            document.querySelectorAll('.export-offerte-docx-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const offerteId = this.getAttribute('data-offerte-id');
+                    window.location.href = `/export_offerte_docx/${offerteId}/`;
+                });
+            });
+
+            // E-mail knop
+            document.querySelectorAll('.btn-email').forEach(button => {
+                button.addEventListener('click', function () {
+                    const email = this.getAttribute('data-email');
+                    window.location.href = `mailto:${email}`;
+                });
+            });
+
+            // Details knop (modal openen)
+            document.querySelectorAll('.btn-details').forEach(button => {
+                button.addEventListener('click', function () {
+                    const offerteId = this.getAttribute('data-offerte-id');
+                    const modalElement = document.getElementById(`offerteModal-${offerteId}`);
+                    const modal = new bootstrap.Modal(modalElement);
+                    modal.show();
+                });
+            });
+            
+            // Event listener toevoegen voor wanneer de modal volledig gesloten is
+document.querySelectorAll('.modal').forEach(modalElement => {
+    modalElement.addEventListener('hidden.bs.modal', function () {
+        // Herstel de scrollbaarheid van de pagina
+        document.body.style.overflow = 'auto';
+        document.body.style.paddingRight = '0';
+        
+        // Verwijder eventuele toegevoegde klassen door Bootstrap
+        document.body.classList.remove('modal-open');
+        
+        // Verwijder de achtergrond-overlay indien aanwezig
+        const modalBackdrops = document.getElementsByClassName('modal-backdrop');
+        while(modalBackdrops.length > 0){
+            modalBackdrops[0].parentNode.removeChild(modalBackdrops[0]);
+        }
+    });
+});
+
+            // Fix voor grijze overlay na sluiten modal
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('hidden.bs.modal', function () {
+                    document.body.classList.remove('modal-open');
+                    const backdrop = document.querySelector('.modal-backdrop');
+                    if (backdrop) {
+                        backdrop.remove();
+                    }
+                });
+            });
+        });
+    </script>
+
+    <!-- AFWIJZEN -->
+    <script>
+   // JavaScript code voor het afwijzen van een offerte
+document.addEventListener('DOMContentLoaded', function() {
+  // Voeg event listeners toe aan alle afwijzingsknoppen
+  document.querySelectorAll('.btn-danger[title="Afwijzen"]').forEach(button => {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // Haal de offerte ID op uit de data attribuut
+      const offerteId = this.getAttribute('data-offerte-id');
+      console.log("Afwijzen knop geklikt voor offerte ID:", offerteId);
+      
+      // CSRF token ophalen voor POST verzoek
+      const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      
+      // Eerst de status bijwerken
+      const formData = new FormData();
+      formData.append('status', 'Afgewezen');
+      
+      fetch(`/update-offerte-status/${offerteId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrftoken
+        },
+        body: formData
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Netwerkfout bij status update: ' + response.status);
+        }
+        return response.json();
+      })
+      .then(result => {
+        console.log("Status bijgewerkt:", result);
+        
+        // Vervolgens de offerte gegevens ophalen voor de email
+        return fetch(`/get-offerte-details/${offerteId}/`);
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Netwerkfout: ' + response.status);
+        }
+        return response.json();
+      })
+      .then(offerte => {
+        console.log("Offerte gegevens ontvangen:", offerte);
+        
+        // Formatteer de datum
+        let datumWeergave;
+        try {
+          const datumObj = new Date(offerte.gewenste_datum);
+          datumWeergave = datumObj.toLocaleDateString('nl-NL', {
+            day: 'numeric', 
+            month: 'long', 
+            year: 'numeric'
+          });
+        } catch (e) {
+          console.log("Kon datum niet formatteren:", e);
+          datumWeergave = offerte.gewenste_datum;
+        }
+        
+        // Stel de email inhoud samen
+        const subject = `Helaas niet beschikbaar op ${datumWeergave} `;
+        const body = `Beste ${offerte.naam_contactpersoon},
+
+Hartelijk dank voor uw aanvraag voor onze diensten op ${datumWeergave} om ${offerte.gewenste_tijd || ''} uur voor ${offerte.aantal_personen} personen (${offerte.formule}).
+
+Helaas moet ik u mededelen dat wij op de door u gewenste datum volledig volgeboekt zijn en daardoor niet in staat zijn om aan uw verzoek te voldoen.
+
+Mocht u interesse hebben in een alternatieve datum, dan horen wij dat graag. Wij staan altijd klaar om u van dienst te zijn op een moment dat voor beide partijen uitkomt.
+
+Nogmaals bedankt voor uw interesse in Retrosnacks.
+
+Met vriendelijke groet,
+
+Kobe
+`;
+
+        // Open het email venster van de gebruiker
+        const mailtoLink = document.createElement('a');
+        mailtoLink.href = `mailto:${encodeURIComponent(offerte.email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        mailtoLink.style.display = 'none';
+        document.body.appendChild(mailtoLink);
+        mailtoLink.click();
+        document.body.removeChild(mailtoLink);
+        
+        console.log("Mail link geopend");
+        
+        // Optioneel: Pagina herladen om de bijgewerkte status te tonen
+        window.location.reload();
+      })
+      .catch(error => {
+        console.error("Er is een fout opgetreden:", error);
+        alert("Er is een fout opgetreden. Controleer de console voor meer informatie.");
+      });
+    });
+  });
+});
+    </script>
+
+
+    <!-- Bevestigen -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.btn-bevestigen').forEach(button => {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      const offerteId = this.getAttribute('data-offerte-id');
+      console.log("Bevestigen knop geklikt voor offerte ID:", offerteId);
+      
+      // Voeg laadindicator toe
+      const originalContent = button.innerHTML;
+      button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+      button.disabled = true;
+      
+      // CSRF token ophalen voor POST verzoek
+      const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      
+      // Eerst de status bijwerken
+      const formData = new FormData();
+      formData.append('status', 'Bevestiging verzonden');
+      
+      fetch(`/update-offerte-status/${offerteId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrftoken
+        },
+        body: formData
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Netwerkfout bij status update: ' + response.status);
+        }
+        return response.json();
+      })
+      .then(result => {
+        console.log("Status bijgewerkt:", result);
+        
+        // Update statusbadge dynamisch
+        const statusBadge = document.querySelector(`[data-status-offerte="${offerteId}"]`);
+        if (statusBadge) {
+          statusBadge.textContent = 'Bevestiging verzonden';
+          statusBadge.classList.remove('bg-warning', 'bg-danger', 'bg-success');
+          statusBadge.classList.add('bg-info');
+        }
+        
+        // Vervolgens de offerte gegevens ophalen voor de email
+        return fetch(`/get-offerte-details/${offerteId}/`);
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Netwerkfout: ' + response.status);
+        }
+        return response.json();
+      })
+      .then(offerte => {
+        console.log("Offerte gegevens ontvangen:", offerte);
+        
+        // Formatteer de datum
+        let datumWeergave;
+        try {
+          const datumObj = new Date(offerte.gewenste_datum);
+          datumWeergave = datumObj.toLocaleDateString('nl-NL', {
+            day: 'numeric', 
+            month: 'long', 
+            year: 'numeric'
+          });
+        } catch (e) {
+          console.log("Kon datum niet formatteren:", e);
+          datumWeergave = offerte.gewenste_datum;
+        }
+        
+        // Stel de email inhoud samen
+        const subject = `Beschikbaarheid bevestigd voor ${datumWeergave}`;
+        const body = `Beste ${offerte.naam_contactpersoon},
+
+Goed nieuws! De door u gevraagde datum ${datumWeergave} om ${offerte.gewenste_tijd || ''} uur is beschikbaar voor uw event.
+
+Hier volgt een korte samenvatting van uw aanvraag:
+- Datum: ${datumWeergave}
+- Tijd: ${offerte.gewenste_tijd || 'Nog te bepalen'}
+- Locatie: ${offerte.event_adres}
+- Aantal personen: ${offerte.aantal_personen}
+- Formule: ${offerte.formule}
+- Totaalprijs: €${offerte.totaal_prijs}
+
+Om deze datum definitief vast te leggen, verzoeken wij u vriendelijk om dit per e-mail te bevestigen.
+
+Wij raden u ook aan om onze FAQ-pagina te bezoeken op https://www.retrosnacks.be/faq, waar u alle praktische informatie kunt vinden over onze diensten, inclusief:
+- Wat wij van u nodig hebben vóór het event
+- Praktische zaken zoals stroomvoorziening en opstelling
+- Wat u van ons kunt verwachten op de dag zelf
+- Betalingsvoorwaarden
+
+Heeft u nog vragen of specifieke wensen? Aarzel dan niet om contact met ons op te nemen.
+
+Wij kijken ernaar uit om van uw event een onvergetelijke ervaring te maken!
+
+Met vriendelijke groet,
+
+Kobe
+RetroSnacks
+www.retrosnacks.be
+`;
+
+        // Open het email venster van de gebruiker
+        const mailtoLink = document.createElement('a');
+        mailtoLink.href = `mailto:${encodeURIComponent(offerte.email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        mailtoLink.style.display = 'none';
+        document.body.appendChild(mailtoLink);
+        mailtoLink.click();
+        document.body.removeChild(mailtoLink);
+        
+        console.log("Mail link geopend");
+        
+        // Herstel knop
+        button.innerHTML = originalContent;
+        button.disabled = false;
+        
+        // Automatische pagina-verversing
+        window.location.reload();
+      })
+      .catch(error => {
+        console.error("Er is een fout opgetreden:", error);
+        alert("Er is een fout opgetreden. Controleer de console voor meer informatie.");
+        // Herstel knop bij fout
+        button.innerHTML = originalContent;
+        button.disabled = false;
+      });
+    });
+  });
+});
+    </script>
+
+
+
+
+<!-- vast leggen -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.btn-vastleggen').forEach(button => {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+      const offerteId = this.getAttribute('data-offerte-id');
+      const button = this;
+      
+      const originalContent = button.innerHTML;
+      button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+      button.disabled = true;
+      
+      const formData = new FormData();
+      formData.append('status', 'Feest ingepland');
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      
+      fetch(`/update-offerte-status/${offerteId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrfToken
+        },
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          button.classList.remove('btn-success');
+          button.classList.add('btn-secondary');
+          button.innerHTML = '<i class="bi bi-calendar-check"></i>';
+          button.title = 'Feest is ingepland';
+          button.disabled = true;
+          
+          const statusBadge = document.querySelector(`[data-status-offerte="${offerteId}"]`);
+          if (statusBadge) {
+            statusBadge.textContent = 'Feest ingepland';
+            statusBadge.classList.remove('bg-warning', 'bg-danger', 'bg-info');
+            statusBadge.classList.add('bg-success');
+          }
+          
+          // Automatische pagina-verversing
+          window.location.reload();
+        } else {
+          throw new Error(data.message || 'Er is een fout opgetreden');
+        }
+      })
+      .catch(error => {
+        button.innerHTML = originalContent;
+        button.disabled = false;
+        console.error('Fout:', error);
+        alert('Er is een fout opgetreden bij het inplannen van het feest.');
+      });
+    });
+  });
+});
+
+</script>
+<script>
+// Wacht tot het document geladen is
+document.addEventListener('DOMContentLoaded', function() {
+    // Selecteer alle knoppen met de class 'btn-vastleggen'
+    const vastleggenButtons = document.querySelectorAll('.btn-vastleggen');
+    
+    // Voeg een event listener toe aan elke knop
+    vastleggenButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Haal de offerte ID op uit de data-attribuut
+            const offerteId = this.getAttribute('data-offerte-id');
+            
+            // Toon een laadspinner
+            this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+            this.disabled = true;
+            
+            // Maak een AJAX verzoek naar de server
+            fetch('/create_client_eenvoudigfactureren/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken(), // Functie om CSRF token te krijgen
+                },
+                body: JSON.stringify({
+                    offerte_id: offerteId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Bepaal het bericht op basis van of de klant al bestond
+                    const message = data.already_exists 
+                        ? 'Klant werd gevonden in het systeem!' 
+                        : 'Klant succesvol aangemaakt!';
+                    
+                    // Toon een succesbericht
+                    showNotification(message, 'success');
+                    
+                    // Update de knop of UI indien nodig
+                    this.innerHTML = '<i class="bi bi-check-lg"></i>';
+                    this.classList.remove('btn-success');
+                    this.classList.add('btn-secondary');
+                    this.disabled = true;
+                    
+                    // Optioneel: pagina verversen of andere acties
+                    // location.reload();
+                } else {
+                    // Toon een foutmelding
+                    showNotification('Fout bij aanmaken klant: ' + data.error, 'danger');
+                    
+                    // Reset de knop
+                    this.innerHTML = '<i class="bi bi-check-lg"></i>';
+                    this.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('Er is een fout opgetreden', 'danger');
+                
+                // Reset de knop
+                this.innerHTML = '<i class="bi bi-check-lg"></i>';
+                this.disabled = false;
+            });
+        });
+    });
+});
+
+// Functie om de CSRF token op te halen
+function getCsrfToken() {
+    // Zoek de CSRF token in de cookies
+    const name = 'csrftoken';
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Functie om notificaties te tonen
+function showNotification(message, type) {
+    // Maak een nieuw notificatie element
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type} alert-dismissible fade show`;
+    notification.role = 'alert';
+    notification.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    
+    // Voeg de notificatie toe aan de pagina
+    const container = document.querySelector('.container') || document.body;
+    container.insertBefore(notification, container.firstChild);
+    
+    // Verwijder de notificatie na 5 seconden
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 150);
+    }, 5000);
+}
+</script>
+</body>
+</html>

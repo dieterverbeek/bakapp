@@ -1,0 +1,34 @@
+Perfect! Here's what to type directly in Notepad for your .gitignore file:
+# Environment variables
+.env
+
+# Django
+*.pyc
+__pycache__/
+*.log
+local_settings.py
+db.sqlite3
+
+# Database backups
+*.sql
+*.dump
+
+
+
+# Virtual environment
+venv/
+env/
+
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
+*.orig
+
+# AWS and deployment
+*.pem
+*.key
+.aws/

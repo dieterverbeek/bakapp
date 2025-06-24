@@ -1,0 +1,984 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - RetroSnacks</title>
+    <!-- Bootstrap CSS via CDN -->
+    <!-- favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <!-- Android/Chrome -->
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'android-chrome-192x192.png' %}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{% static 'android-chrome-512x512.png' %}">
+    <!-- Iphone -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon-180x180.png' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- Eigen CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+     :root {
+            --primary-color: #4d772b;
+            --primary-hover: #0a4a9e;
+            --secondary-color: #b4b0a7;
+            --accent-color: #b88f53;
+            --text-dark: #333;
+            --text-light: #6c757d;
+            --white: #fff;
+            --light-bg: #f8f9fa;
+            --border-color: #dee2e6;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --radius: 10px;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #b7bbbecb;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .dashboard-header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+        .dashboard-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .dashboard-nav {
+            display: flex;
+            gap: 15px;
+        }
+        .dashboard-nav a {
+            color: var(--white);
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: var(--radius);
+            transition: background-color 0.2s;
+        }
+        .dashboard-nav a:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+        .dashboard-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .klanten-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .search-container {
+            background-color: var(--white);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .klanten-lijst {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+        }
+
+        .klant-card {
+            border-left: 4px solid var(--accent-color);
+            background-color: var(--white);
+            margin-bottom: 15px;
+            transition: transform 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .klant-card:hover {
+            transform: translateX(5px);
+        }
+
+        
+
+        .klant-detail {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 6px;
+        }
+
+        .actie-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .actie-buttons .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .actie-buttons .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .card-title {
+            color: var(--text-dark);
+            margin-bottom: 7px;
+            font-size: 18px;
+        }
+
+        /* Responsieve aanpassing voor kleine schermen */
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                padding: 10px 15px;
+                text-align: center;
+            }
+            .dashboard-header h1 {
+                font-size: 1.2rem;
+                margin-bottom: 10px;
+            }
+            .dashboard-nav {
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+            }
+            .dashboard-nav a {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+                display: block; /* Zorgt dat links de volle breedte innemen */
+            }
+            .klant-card .row {
+                flex-direction: column;
+            }
+            .actie-buttons {
+                margin-top: 15px;
+                justify-content: flex-start;
+            }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        
+
+        .feest-lijst {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .feest-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            transition: background-color 0.2s ease;
+        }
+
+        .feest-item:hover {
+            background-color: #f9fafb;
+        }
+
+        .feest-item:last-child {
+            border-bottom: none;
+        }
+
+        .feest-item h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 0.75rem;
+        }
+
+        .feest-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+            color: #4b5563;
+            font-size: 1rem;
+        }
+
+        .feest-info ion-icon {
+            font-size: 1.25rem;
+            color: #6b7280;
+        }
+
+        .prijs {
+            color: #2563eb;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .no-feesten {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+            font-size: 1.125rem;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 1rem auto;
+                padding: 0 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.75rem;
+            }
+
+            .feest-item h2 {
+                font-size: 1.25rem;
+            }
+
+            .feest-info {
+                font-size: 0.875rem;
+            }
+        }
+        /* Stijl voor de eventlijst */
+.feest-lijst {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+.feest-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    padding: 1.5rem;
+}
+
+.feest-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.feest-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 1rem;
+}
+
+.feest-header h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.offerte-status {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    text-transform: uppercase;
+    
+}
+
+.status-confirmed {
+    background-color: #e3f7eb;
+    color: #28a745;
+}
+
+.status-pending {
+    background-color: #fff8e1;
+    color: #ffc107;
+}
+
+.status-declined {
+    background-color: #d2ebc2;
+    color: #0d3a07;
+}
+
+.feest-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.feest-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+.feest-info ion-icon {
+    font-size: 1.2rem;
+    color: #666;
+    min-width: 1.2rem;
+}
+
+.feest-info.prijs {
+    font-weight: 600;
+    color: #333;
+}
+
+.feest-info.prijs ion-icon {
+    color: #28a745;
+}
+
+/* Stijl voor de actieknoppen */
+.offerte-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f0f0f0;
+}
+
+.action-btn {
+    border: none;
+    background: none;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #fff;
+}
+
+.action-btn i {
+    font-size: 1rem;
+}
+
+.action-btn.email {
+    background-color: #6c757d;
+}
+
+.action-btn.details {
+    background-color: #17a2b8;
+}
+
+.action-btn.edit {
+    background-color: #007bff;
+}
+
+.action-btn.export {
+    background-color: #28a745;
+}
+
+.action-btn.delete {
+    background-color: #dc3545;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15);
+}
+
+/* Stijl voor wanneer er geen feesten zijn */
+.no-feesten {
+    text-align: center;
+    padding: 3rem 0;
+    color: #6c757d;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.no-feesten .empty-icon {
+    font-size: 3rem;
+    opacity: 0.3;
+}
+
+/* Responsive aanpassingen */
+@media (max-width: 768px) {
+    .feest-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .offerte-actions {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+   
+    
+    .container {
+        padding: 0;
+        margin: 1rem auto;
+    }
+    
+
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        padding: 0;
+        margin: 1rem auto;
+    }
+    
+    .dashboard-header {
+        flex-direction: column;
+        padding: 10px;
+        text-align: center;
+    }
+    
+    .dashboard-header h1 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+    
+    .dashboard-nav {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+        width: 100%;
+    }
+    
+    .dashboard-nav a {
+        padding: 8px 5px;
+        font-size: 0.85rem;
+        text-align: center;
+    }
+}
+
+
+.search-container {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.search-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    padding: 10px 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.search-bar:focus-within {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    background-color: #ffffff;
+}
+
+.search-icon {
+    color: #555;
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+
+#offerteZoeken {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 1rem;
+    color: #333;
+    padding: 5px 0;
+    outline: none;
+}
+
+#clearSearch {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+#clearSearch:hover {
+    background-color: #e0e0e0;
+    color: #555;
+}
+
+.geen-resultaten {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-style: italic;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+
+
+
+
+    </style>
+
+<body>
+    {% load static %}
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+        <h1>RetroSnacks Dashboard</h1>
+        <nav class="dashboard-nav">
+            <a href="{% url 'dashboard' %}"><i class="bi bi-house-door me-1"></i></a>
+            <a href="{% url 'offertes' %}">Offertes</a>
+            <a href="{% url 'geplande_feesten' %}">Geplande events</a>
+            <a href="{% url 'klanten' %}">Klanten</a>
+            <a href="{% url 'facturen' %}">Facturen</a>
+            <a href="{% url 'logout' %}">Uitloggen</a>
+        </nav>
+    </header>
+    <br>
+    <br>
+    <div class="container">
+        <div class="header">
+            <h1>Geplande Events</h1>
+        </div>
+
+        <div class="search-container">
+            <div class="search-bar">
+                <ion-icon name="search-outline" class="search-icon"></ion-icon>
+                <input type="text" id="offerteZoeken" placeholder="Zoek op naam, bedrijf, datum, locatie..." onkeyup="zoekOffertes()">
+                <button id="clearSearch" onclick="clearSearch()">
+                    <ion-icon name="close-outline"></ion-icon>
+                </button>
+            </div>
+        </div>
+
+        {% if offertes %}
+    <div class="feest-lijst" id="offerteContainer">
+        {% for offerte in offertes %}
+            <div class="feest-card" data-zoek="{{ offerte.naam_contactpersoon|lower }} {{ offerte.naam_bedrijf|lower }} {{ offerte.gewenste_datum }} {{ offerte.event_adres|lower }} {{ offerte.formule|lower }} {{ offerte.totaal_prijs }} {{ offerte.aantal_personen }} {{ offerte.gewenste_tijd }} {{ offerte.is_bevestigd|lower }}">
+                <div class="feest-header">
+                    <h2>{{ offerte.naam_contactpersoon }} {% if offerte.naam_bedrijf %}- {{ offerte.naam_bedrijf }}{% endif %}</h2>
+                    <div class="offerte-status {% if offerte.is_bevestigd == 'Bevestigd' %}status-confirmed{% elif offerte.is_bevestigd == 'In behandeling' %}status-pending{% else %}status-declined{% endif %}">
+                        {{ offerte.is_bevestigd }}
+                    </div>
+                </div>
+                
+                <div class="feest-content">
+                    <div class="feest-info">
+                        <ion-icon name="calendar-outline"></ion-icon>
+                        <span>{{ offerte.gewenste_datum }} om {{ offerte.gewenste_tijd|time:"H:i" }}</span>
+                    </div>
+                    <div class="feest-info">
+                        <ion-icon name="location-outline"></ion-icon>
+                        <span>{{ offerte.event_adres|default:"Locatie niet opgegeven" }}</span>
+                    </div>
+                    <div class="feest-info personen">
+                        <ion-icon name="people-outline"></ion-icon>
+                        <span>{{ offerte.aantal_personen }} personen</span>
+                    </div>
+                    <div class="feest-info formule">
+                        <ion-icon name="restaurant-outline"></ion-icon>
+                        <span>{{ offerte.formule }}</span>
+                    </div>
+                    <div class="feest-info prijs">
+                        <ion-icon name="cash-outline"></ion-icon>
+                        <span>€{{ offerte.totaal_prijs }}</span>
+                    </div>
+                </div>
+                
+                <div class="offerte-actions">
+                    <button class="action-btn email" data-email="{{ offerte.email }}" title="E-mail sturen">
+                        <i class="bi bi-envelope"></i>
+                    </button>
+                    <button class="action-btn details" data-bs-toggle="modal" data-bs-target="#offerteModal-{{ offerte.id }}" title="Details bekijken" data-offerte-id="{{ offerte.id }}">
+                        <i class="bi bi-info-circle"></i>
+                    </button>
+                    <a href="{% url 'offerte_aanpassen' offerte.id %}" class="action-btn edit" title="Offerte aanpassen">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <button class="action-btn export" data-offerte-id="{{ offerte.id }}" title="Exporteren als DOCX">
+                        <i class="bi bi-journal-text"></i>
+                    </button>
+                    <button class="action-btn delete" data-offerte-id="{{ offerte.id }}" title="Verwijderen">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Modals buiten de kaart-loop -->
+    {% for offerte in offertes %}
+        <div class="modal fade" id="offerteModal-{{ offerte.id }}" tabindex="-1" aria-labelledby="offerteModalLabel-{{ offerte.id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Offerte Details</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="offerte-detail-info">
+                            <p><strong>Naam contactpersoon:</strong> {{ offerte.naam_contactpersoon }}</p>
+                            <p><strong>Naam Bedrijf:</strong> {{ offerte.naam_bedrijf|default:"Niet opgegeven" }}</p>
+                            <p><strong>Email:</strong> {{ offerte.email }}</p>
+                            <p><strong>Telefoon:</strong> {{ offerte.telefoon }}</p>
+                            <p><strong>BTW nummer:</strong> {{ offerte.btw_nummer }}</p>
+                            <p><strong>Aantal Personen:</strong> {{ offerte.aantal_personen }}</p>
+                            <p><strong>Adres:</strong> {{ offerte.straat }} {{ offerte.nummer }}, {{ offerte.gemeente }}</p>
+                            <p><strong>Event Adres:</strong> {{ offerte.event_adres|default:"Niet opgegeven" }}</p>
+                            <p><strong>Gewenste Datum:</strong> {{ offerte.gewenste_datum }}</p>
+                            <p><strong>Gewenste Tijd:</strong> {{ offerte.gewenste_tijd|time:"H:i" }}</p>
+                            <p><strong>Formule:</strong> {{ offerte.formule }}</p>
+                            <p><strong>Status:</strong> {{ offerte.is_bevestigd }}</p>
+                            <p><strong>Totaal Prijs:</strong> €{{ offerte.totaal_prijs }}</p>
+                            <p><strong>Extra:</strong> {{ offerte.extra_info }}</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sluiten</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+{% else %}
+    <div class="no-feesten">
+        <ion-icon name="calendar-outline" class="empty-icon"></ion-icon>
+        <p>Er zijn momenteel geen geplande feesten.</p>
+    </div>
+{% endif %}
+
+<!-- JavaScript voor zoekfunctionaliteit -->
+<script>
+function zoekOffertes() {
+    // Haal de zoekterm op en zet deze om naar kleine letters
+    const zoekterm = document.getElementById("offerteZoeken").value.toLowerCase();
+    const offerteCards = document.querySelectorAll('.feest-card');
+    const clearButton = document.getElementById('clearSearch');
+    
+    // Toon of verberg de clear-knop
+    if (zoekterm.length > 0) {
+        clearButton.style.display = 'flex';
+    } else {
+        clearButton.style.display = 'none';
+    }
+    
+    // Aantal gevonden resultaten bijhouden
+    let aantalGevonden = 0;
+    
+    // Loop door alle offerte kaarten
+    offerteCards.forEach(card => {
+        const zoekData = card.getAttribute('data-zoek');
+        
+        if (zoekData && zoekData.indexOf(zoekterm) > -1) {
+            card.style.display = "";
+            aantalGevonden++;
+        } else {
+            card.style.display = "none";
+        }
+    });
+    
+    // Controleer of er geen resultaten zijn
+    const container = document.getElementById('offerteContainer');
+    let geenResultatenElement = document.getElementById('geenResultatenBericht');
+    
+    if (aantalGevonden === 0 && zoekterm.length > 0) {
+        if (!geenResultatenElement) {
+            geenResultatenElement = document.createElement('p');
+            geenResultatenElement.id = 'geenResultatenBericht';
+            geenResultatenElement.className = 'geen-resultaten';
+            geenResultatenElement.innerText = 'Geen offertes gevonden die overeenkomen met je zoekopdracht.';
+            container.parentNode.insertBefore(geenResultatenElement, container.nextSibling);
+        }
+    } else if (geenResultatenElement) {
+        geenResultatenElement.remove();
+    }
+}
+
+function clearSearch() {
+    document.getElementById("offerteZoeken").value = '';
+    zoekOffertes();
+    document.getElementById('clearSearch').style.display = 'none';
+}
+
+// Initialiseer de zoekbalk
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('clearSearch').style.display = 'none';
+});
+</script>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM is geladen, event listeners worden toegevoegd');
+    
+    // Controleer of Bootstrap Modal beschikbaar is
+    if (typeof bootstrap === 'undefined' || typeof bootstrap.Modal === 'undefined') {
+        console.error('Bootstrap Modal is niet beschikbaar. Zorg ervoor dat Bootstrap correct is geladen.');
+        
+        // Voeg bootstrap toe als het niet geladen is (fallback)
+        if (typeof bootstrap === 'undefined') {
+            console.log('Bootstrap toevoegen als fallback');
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js';
+            script.integrity = 'sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p';
+            script.crossOrigin = 'anonymous';
+            document.head.appendChild(script);
+        }
+    }
+
+    document.querySelectorAll('.btn-details').forEach(button => {
+    console.log('Details button gevonden:', button);
+
+    button.addEventListener('click', function(event) {
+        event.preventDefault();
+        console.log('Details button geklikt');
+
+        const offerteId = this.getAttribute('data-offerte-id');
+        console.log('Offerte ID:', offerteId);
+
+        if (!offerteId) {
+            console.error('Geen geldig offerte ID gevonden voor deze knop');
+            return;
+        }
+
+        const modalId = `offerteModal-${offerteId}`;
+        console.log('Modal ID om te openen:', modalId);
+
+        const modalElement = document.getElementById(modalId);
+
+        if (modalElement) {
+            console.log('Modal element gevonden:', modalElement);
+
+            // Functie om de body te resetten na het sluiten van de modal
+            const resetBody = () => {
+                document.body.classList.remove('modal-open');
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove();
+                }
+                document.body.style.overflow = ''; // Reset overflow
+            };
+
+            try {
+                // Methode 1: Met Bootstrap
+                if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                    console.log('Bootstrap gebruikt om modal te openen');
+                    const modal = new bootstrap.Modal(modalElement);
+                    modal.show();
+
+                    // Zorg ervoor dat de body gereset wordt na het sluiten
+                    modalElement.addEventListener('hidden.bs.modal', resetBody);
+                }
+                // Methode 2: JQuery fallback
+      
+                else if (typeof $ !== 'undefined' && typeof $(modalElement).modal === 'function') {
+                    console.log('jQuery gebruikt om modal te openen');
+                    $(modalElement).modal('show');
+
+                    // Zorg ervoor dat de body gereset wordt na het sluiten
+                    $(modalElement).on('hidden.bs.modal', resetBody);
+                }
+                // Methode 3: Directe manipulatie
+                else {
+                    console.log('Directe DOM manipulatie om modal te tonen');
+                    modalElement.classList.add('show');
+                    modalElement.style.display = 'block';
+                    document.body.classList.add('modal-open');
+                    document.body.style.overflow = 'hidden'; // Voorkom scrollen achter de modal
+
+                    // Overlay toevoegen (als deze nog niet bestaat)
+                    if (!document.querySelector('.modal-backdrop')) {
+                        const backdrop = document.createElement('div');
+                        backdrop.className = 'modal-backdrop fade show';
+                        document.body.appendChild(backdrop);
+
+                        // Event listener om de modal te sluiten bij klikken op de backdrop
+                        backdrop.addEventListener('click', () => {
+                            modalElement.classList.remove('show');
+                            modalElement.style.display = 'none';
+                            resetBody();
+                        });
+                    }
+
+                    // Event listener voor de sluitknop (indien aanwezig)
+                    const closeButton = modalElement.querySelector('[data-bs-dismiss="modal"]');
+                    if (closeButton) {
+                        closeButton.addEventListener('click', () => {
+                            modalElement.classList.remove('show');
+                            modalElement.style.display = 'none';
+                            resetBody();
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error('Fout bij openen van modal:', error);
+            }
+        } else {
+            console.error(`Modal met ID '${modalId}' niet gevonden in het document!`);
+            console.log('Alle modals in document:', document.querySelectorAll('.modal'));
+        }
+    });
+});
+
+    // Exporteren naar DOCX
+    document.querySelectorAll('.action-btn.export').forEach(button => {
+        button.addEventListener('click', function() {
+            const offerteId = this.getAttribute('data-offerte-id');
+            window.location.href = `/export_offerte_docx/${offerteId}/`;
+        });
+    });
+
+    // E-mail knop
+    document.querySelectorAll('.action-btn.email').forEach(button => {
+        button.addEventListener('click', function() {
+            const email = this.getAttribute('data-email');
+            window.location.href = `mailto:${email}`;
+        });
+    });
+
+    // Verwijderen knop
+    
+// Add this function to get CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Replace your existing delete button code with this:
+document.querySelectorAll('.action-btn.delete').forEach(button => {
+    button.addEventListener('click', function() {
+        const offerteId = this.getAttribute('data-offerte-id');
+        console.log('Delete button clicked for offerte ID:', offerteId); // Debug line
+        
+        if (!offerteId) {
+            console.error('No offerte ID found');
+            alert('Geen geldig offerte ID gevonden');
+            return;
+        }
+        
+        if (confirm('Weet u zeker dat u deze offerte wilt verwijderen?')) {
+            console.log('User confirmed deletion'); // Debug line
+            
+            fetch('/delete_offerte/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'), // Add CSRF token
+                },
+                body: JSON.stringify({
+                    offerte_id: offerteId
+                })
+            })
+            .then(response => {
+                console.log('Response status:', response.status); // Debug line
+                console.log('Response headers:', response.headers); // Debug line
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response data:', data); // Debug line
+                
+                if (data.success) {
+                    console.log('Delete successful, removing element'); // Debug line
+                    const feestCard = button.closest('.feest-card');
+                    if (feestCard) {
+                        feestCard.remove();
+                        console.log('Feest card removed from DOM'); // Debug line
+                    } else {
+                        console.log('Feest card not found, reloading page'); // Debug line
+                        location.reload();
+                    }
+                } else {
+                    console.error('Delete failed:', data.error); // Debug line
+                    alert('Fout bij verwijderen: ' + (data.error || 'Onbekende fout'));
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error); // Debug line
+                alert('Er is een fout opgetreden bij het verwijderen van de offerte: ' + error.message);
+            });
+        }
+    });
+});
+
+    // Modal sluiten fix
+    document.querySelectorAll('.modal .btn-close, .modal .btn-secondary').forEach(button => {
+        button.addEventListener('click', function() {
+            console.log('Modal sluit-knop geklikt');
+            const modal = this.closest('.modal');
+            
+            if (modal) {
+                try {
+                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                        const modalInstance = bootstrap.Modal.getInstance(modal);
+                        if (modalInstance) modalInstance.hide();
+                    } else {
+                        modal.classList.remove('show');
+                        modal.style.display = 'none';
+                        document.body.classList.remove('modal-open');
+                        
+                        const backdrops = document.querySelectorAll('.modal-backdrop');
+                        backdrops.forEach(el => el.remove());
+                    }
+                } catch (error) {
+                    console.error('Fout bij sluiten modal:', error);
+                    // Directe DOM manipulatie als fallback
+                    modal.classList.remove('show');
+                    modal.style.display = 'none';
+                    document.body.classList.remove('modal-open');
+                    document.body.style.overflow = 'auto';
+                    document.body.style.paddingRight = '0';
+                    
+                    const backdrops = document.querySelectorAll('.modal-backdrop');
+                    backdrops.forEach(el => el.remove());
+                }
+            }
+        });
+    });
+
+    // Extra debugging informatie in console
+    console.log('Details buttons:', document.querySelectorAll('.action-btn.details').length);
+    console.log('Modals:', document.querySelectorAll('.modal').length);
+    console.log('Bootstrap beschikbaar:', typeof bootstrap !== 'undefined');
+});
+    </script>
+
+    
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

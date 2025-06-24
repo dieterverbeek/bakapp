@@ -1,0 +1,1229 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - RetroSnacks</title>
+    <!-- favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <!-- Android/Chrome -->
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'android-chrome-192x192.png' %}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{% static 'android-chrome-512x512.png' %}">
+    <!-- Iphone -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon-180x180.png' %}">
+    
+    <!-- Bootstrap CSS via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- Eigen CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #4d772b;
+            --primary-hover: #0a4a9e;
+            --secondary-color: #b4b0a7;
+            --accent-color: #b88f53;
+            --text-dark: #333;
+            --text-light: #6c757d;
+            --white: #fff;
+            --light-bg: #f8f9fa;
+            --border-color: #dee2e6;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --radius: 10px;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #b7bbbecb;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+        }
+
+.dashboard-header {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow);
+}
+
+.dashboard-header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.dashboard-nav {
+    display: flex;
+    gap: 15px;
+}
+
+.dashboard-nav a {
+    color: var(--white);
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: var(--radius);
+    transition: background-color 0.2s;
+}
+
+.dashboard-nav a:hover {
+    background-color: rgba(255,255,255,0.2);
+}
+
+.dashboard-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Notes and Social Section */
+.dashboard-content-wrapper {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.dashboard-notes-wrapper {
+    background-color: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px;
+    flex: 1;
+    min-width: 0;
+}
+
+.notes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.notes-header h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.btn-primary, .btn-success, .btn-secondary, .btn-delete {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-primary { 
+    background-color: var(--primary-color); 
+    color: var(--white); 
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn-success { 
+    background-color: #28a745; 
+    color: var(--white); 
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+.btn-secondary { 
+    background-color: #6c757d; 
+    color: var(--white); 
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.btn-delete { 
+    background: transparent; 
+    color: #dc3545; 
+    padding: 4px 8px;
+}
+
+.btn-delete:hover {
+    color: #c82333;
+}
+
+.add-note-form {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: var(--light-bg);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    margin-bottom: 12px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.notes-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+}
+
+.note-card {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+    background-color: var(--white);
+    box-shadow: var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.note-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.note-card h3 {
+    font-size: 1.1rem;
+    margin: 0 0 10px 0;
+    color: var(--primary-color);
+}
+
+.note-card p {
+    font-size: 0.95rem;
+    margin: 0 0 10px 0;
+    color: var(--text-dark);
+    line-height: 1.4;
+}
+
+.note-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-top: 5px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-color);
+}
+
+.empty-notes {
+    text-align: center;
+    padding: 30px;
+    color: var(--text-light);
+    background-color: var(--light-bg);
+    border-radius: 8px;
+    font-size: 1.1rem;
+}
+
+.social-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    min-width: 60px;
+}
+
+.btn-social {
+    padding: 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s;
+}
+
+.btn-social:hover {
+    transform: scale(1.05);
+}
+
+.btn-facebook { background-color: #3b5998; }
+.btn-instagram { background-color: #e1306c; }
+.btn-factuur { background-color: #007bff; }
+
+/* Weather and Calendar Section */
+/* Weather and Calendar Section */
+.rs-dashboard-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.rs-weather-widget,
+.rs-calendar-widget {
+    flex: 1;
+    min-width: 300px;
+    height: 385px;
+    display: flex;
+    box-shadow: var(--shadow);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background-color: white;
+}
+
+.rs-weather-widget > div,
+.rs-calendar-widget > div {
+    width: 100%;
+}
+
+.rs-weather-widget iframe {
+    border-radius: var(--radius);
+}
+
+.rs-cal-widget {
+    background-color: var(--white);
+    border-radius: var(--radius);
+    padding: 20px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.rs-cal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.rs-cal-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.rs-cal-nav {
+    display: flex;
+    gap: 10px;
+}
+
+.rs-cal-nav button {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.rs-cal-nav button:hover {
+    background-color: var(--primary-hover);
+}
+
+.rs-cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-auto-rows: minmax(30px, 1fr);
+    gap: 5px;
+    flex-grow: 1;
+}
+
+.rs-cal-weekday {
+    text-align: center;
+    font-weight: 600;
+    padding: 8px 5px;
+    color: var(--primary-color);
+}
+
+.rs-cal-day {
+    text-align: center;
+    padding: 8px 0;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: background-color 0.2s;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+}
+
+.rs-cal-day:hover {
+    background-color: var(--light-bg);
+    cursor: pointer;
+}
+
+.rs-cal-day.current {
+    background-color: var(--primary-color);
+    color: var(--white);
+    font-weight: 600;
+}
+
+.rs-cal-day.other-month {
+    color: var(--text-light);
+    opacity: 0.6;
+}
+
+/* Event dot styling */
+.event-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #f03b0e;
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: block !important;
+}
+
+.rs-cal-day.has-event {
+    cursor: pointer;
+}
+
+.rs-cal-day.has-event:hover {
+    background-color: #f9e6e6;
+}
+
+.rs-cal-day.has-event:hover .event-dot {
+    transform: translateX(-50%) scale(1.3);
+    transition: transform 0.2s ease;
+}
+
+
+
+/* Responsive Design */
+/* Tablets and smaller desktops */
+@media (max-width: 992px) {
+    .dashboard-main {
+        padding: 15px;
+    }
+    
+    .notes-list {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+}
+
+/* Tablets and large phones */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        padding: 0;
+        margin: 1rem auto;
+    }
+    
+    .dashboard-header {
+        flex-direction: column;
+        padding: 10px;
+        text-align: center;
+    }
+    
+    .dashboard-header h1 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+    
+    .dashboard-nav {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+        width: 100%;
+    }
+    
+    .dashboard-nav a {
+        padding: 8px 5px;
+        font-size: 0.85rem;
+        text-align: center;
+    }
+    
+    .rs-dashboard-container {
+        flex-direction: column;
+    }
+    
+    .rs-weather-widget, 
+    .rs-calendar-widget {
+        width: 100%;
+    }
+    
+    .offerte-container {
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 8px;
+    }
+    
+    .offerte-header {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+    
+    .offerte-item {
+        padding: 10px;
+    }
+    
+    .offerte-data {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .offerte-field {
+        padding: 3px 0;
+        width: 100%;
+    }
+    
+    /* Specifieke styling voor de velden */
+    .offerte-field.naam {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #2980b9;
+    }
+    
+    .offerte-field.event-adres,
+    .offerte-field.datum,
+    .offerte-field.tijd,
+    .offerte-field.status {
+        font-size: 0.9rem;
+        text-align: left;
+    }
+    
+    /* Speciale aanpassing voor aantal-personen met "personen" tekst */
+    .offerte-field.aantal-personen {
+        font-size: 0.9rem;
+        text-align: left;
+    }
+    
+    .offerte-field.aantal-personen::after {
+        content: " personen";
+    }
+    
+    .offerte-item.header {
+        display: none; /* Verberg de header rij op mobiel */
+    }
+    
+    .offerte-actions {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px 0;
+    }
+    
+    .action-group, .status-actions {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+        width: 100%;
+    }
+    
+    .offerte-actions button, 
+    .offerte-actions a {
+        width: 100%;
+        margin: 0;
+        padding: 8px 5px;
+        font-size: 0.8rem;
+    }
+    
+    .btn-sm {
+        padding: 6px;
+    }
+    
+    .search-bar {
+        padding: 8px 10px;
+    }
+    
+    #search-input {
+        font-size: 0.9rem;
+    }
+    
+    .search-icon {
+        font-size: 1rem;
+    }
+    
+    .add-offerte-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 20px;
+    }
+    
+    .modal-content {
+        padding: 15px;
+    }
+    
+    .modal-body p {
+        font-size: 0.9rem;
+        margin: 3px 0;
+    }
+}
+
+/* Mobile phones */
+@media (max-width: 576px) {
+    .dashboard-content-wrapper {
+        flex-direction: column;
+    }
+    
+    .social-buttons {
+        flex-direction: row;
+        justify-content: center;
+        gap: 20px;
+        padding: 15px 0;
+    }
+    
+    .notes-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .note-card {
+        padding: 12px;
+    }
+    
+    .btn-primary, 
+    .btn-success, 
+    .btn-secondary {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .rs-cal-day {
+        padding: 5px 0;
+        font-size: 0.9rem;
+    }
+    
+    /* Extra mobile styling for offertes */
+    .offerte-actions button, 
+    .offerte-actions a {
+        padding: 6px 3px;
+        font-size: 0.75rem;
+    }
+}
+
+.week-events-container {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.week-events-container h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: #1f2937;
+    text-align: center;
+}
+
+.events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.event-card {
+    padding: 1rem;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+    font-size: 0.95rem;
+}
+
+.event-row {
+    margin-bottom: 0.5rem;
+}
+
+@media (min-width: 768px) {
+    .event-card {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: 1.5rem;
+        row-gap: 0.5rem;
+    }
+    .event-row {
+        margin-bottom: 0;
+    }
+}
+
+
+/* Algemene Styling voor de Acties sectie */
+.actie-card {
+    border-radius: 12px; /* Zachte afgeronde hoeken */
+    overflow: hidden; /* Zorgt dat de schaduw mooi uitkomt */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.actie-card:hover {
+    transform: translateY(-5px); /* Lift-effect bij hover */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important; /* Meer prominente schaduw */
+}
+
+.actie-card .card-header {
+    background-color:(135deg, #136109, #148130); /* Standaard Bootstrap primary, aanpasbaar */
+    border-bottom: none;
+    padding: 1rem 1.5rem;
+}
+
+.actie-card .card-title {
+    font-weight: 700; /* Dikkere titel */
+    color: (135deg, #136109, #148130); /* Afstemmen op je primaire kleur */
+    margin-bottom: 0.75rem;
+}
+
+.actie-card .card-text {
+    line-height: 1.6;
+    color: #6c757d; /* Zachte grijstint voor tekst */
+    margin-bottom: 1rem; /* Ruimte onder de omschrijving */
+}
+
+.actie-card small {
+    font-size: 0.85em;
+    color: #495057; /* Donkerdere grijstint voor datum */
+}
+
+/* Styling voor de 'Verwijder' knop binnen de kaart */
+.actie-card .btn-outline-danger {
+    border-width: 2px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.actie-card .btn-outline-danger:hover {
+    color: white;
+    background-color: #dc3545; /* Bootstrap danger kleur */
+    border-color: #dc3545;
+}
+
+/* Aanpassingen voor het Toevoegen Formulier */
+.card-header.bg-primary {
+    background: linear-gradient(135deg, #136109, #148130) !important; /* Mooie gradient */
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+
+}
+
+.card-body .btn-primary {
+    background: linear-gradient(135deg, #136109, #148130) !important;
+    border: none;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 8px;
+    max-width: 200px;
+    transition: all 0.3s ease;
+}
+
+.card-body .btn-primary:hover {
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Zorgt ervoor dat form-control velden binnen het card-body er goed uitzien */
+.card-body .form-control {
+    border-radius: 6px;
+    border-color: #ced4da;
+    padding: 0.75rem 1rem;
+}
+
+.card-body .form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+}
+
+/* Voor de django-provided datum/tijd widgets (indien van toepassing) */
+.admin-widgets .vDateField,
+.admin-widgets .vTimeField {
+    width: auto; /* Zorg dat ze niet de volle breedte innemen */
+    display: inline-block; /* Plaats ze naast elkaar indien mogelijk */
+    margin-right: 10px;
+}
+
+/* Styling voor de "Geen acties" melding */
+.alert-info {
+    background-color: #e0f7fa;
+    border-color: #b2ebf2;
+    color: #00838f;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.alert-info i {
+    font-size: 1.5rem;
+    vertical-align: middle;
+}
+/* Media Query voor Extra Kleine Schermen (typisch <= 576px, Bootstrap's 'sm' breakpoint) */
+@media (max-width: 575.98px) {
+    .container {
+        padding-left: 15px; /* Iets minder padding aan de zijkanten op zeer kleine schermen */
+        padding-right: 15px;
+    }
+
+    .card.shadow-sm {
+        margin-bottom: 20px; /* Kleinere marge onder formulieren/kaarten */
+    }
+
+    .card-body {
+        padding: 1rem; /* Iets minder padding binnen de kaarten */
+    }
+
+    .actie-card .card-title {
+        font-size: 1.2rem; /* Iets kleinere titel op zeer kleine schermen */
+        margin-bottom: 0.5rem;
+    }
+
+    .actie-card .card-text {
+        font-size: 0.9rem; /* Iets kleinere tekst voor de omschrijving */
+        line-height: 1.5;
+    }
+
+    .actie-card small {
+        font-size: 0.75em; /* Nog kleinere datumtekst */
+    }
+
+    .actie-card .btn-outline-danger {
+        padding: 0.3rem 0.6rem; /* Compacter knopje */
+        font-size: 0.8rem;
+    }
+
+    /* Indien nodig: Pas de breedte van datum/tijd input velden aan als ze niet goed passen */
+    .admin-widgets .vDateField,
+    .admin-widgets .vTimeField {
+        width: 100%; /* Zorg dat ze de volle breedte nemen op mobiel */
+        display: block; /* Stapel ze onder elkaar */
+        margin-bottom: 10px; /* Voeg wat ruimte toe tussen gestapelde velden */
+        margin-right: 0;
+    }
+}
+
+
+
+
+
+
+
+      
+    </style>
+</head>
+<body>
+    {% load static %}
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+        <h1>RetroSnacks Dashboard</h1>
+        <nav class="dashboard-nav">
+            <a href="{% url 'dashboard' %}"><i class="bi bi-house-door me-1"></i></a>
+            <a href="{% url 'offertes' %}">Offertes</a>
+            <a href="{% url 'geplande_feesten' %}">Geplande events</a>
+            <a href="{% url 'klanten' %}">Klanten</a>
+            <a href="{% url 'facturen' %}">Facturen</a>
+            <a href="{% url 'logout' %}">Uitloggen</a>
+        </nav>
+    </header>
+
+    <main class="dashboard-main">
+        <!-- Notes and Social Section -->
+        <div class="dashboard-content-wrapper">
+            <div class="dashboard-notes-wrapper">
+                <div class="notes-header">
+                    <h2>Mijn Notities</h2>
+                    <button id="toggleAddNote" class="btn-primary">Nieuw</button>
+                </div>
+                
+                <div id="addNoteForm" class="add-note-form" style="display: none;">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="add_note">
+                        <input type="text" name="title" id="noteTitle" class="form-control" placeholder="Titel" required>
+                        <textarea name="content" id="noteContent" class="form-control" rows="3" placeholder="Inhoud" required></textarea>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-success">Opslaan</button>
+                            <button type="button" id="cancelNote" class="btn-secondary">Annuleren</button>
+
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="notes-list">
+                    {% if notes %}
+                        {% for note in notes %}
+                            <div class="note-card">
+                                <h3>{{ note.title }}</h3>
+                                <p>{{ note.content }}</p>
+                                <div class="note-footer">
+                                    <span>{{ note.created_at|date:"d-m-Y" }}</span>
+                                    <form method="POST" style="display: inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="delete_note">
+                                        <input type="hidden" name="note_id" value="{{ note.id }}">
+                                        <button type="submit" class="btn-delete" onclick="return confirm('Weet je zeker dat je deze notitie wilt verwijderen?')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                        <button type="button" class="btn-edit" onclick="editNote('{{ note.id }}', '{{ note.title|escapejs }}', '{{ note.content|escapejs }}')">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        
+                                    </form>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="empty-notes">
+                            <p>Geen notities aanwezig</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Social Buttons -->
+            <div class="social-buttons">
+                <a href="https://www.facebook.com/" target="_blank" class="btn-social btn-facebook">
+                    <i class="bi bi-facebook"></i>
+                </a>
+                <a href="https://www.instagram.com/" target="_blank" class="btn-social btn-instagram">
+                    <i class="bi bi-instagram"></i>
+                </a>
+                <a href="https://eenvoudigfactureren.be/" target="_blank" class="btn-social btn-factuur">
+                    <i class="bi bi-receipt"></i>
+                </a>
+            </div>
+        </div>
+<br>
+        <!-- Weather and Calendar Section -->
+        <div class="rs-dashboard-container">
+            <div class="rs-weather-widget">
+                <div style="width:100%">
+                    <iframe title="weather widget" width="100%" height="328px" frameBorder="0" scrolling="no" loading="lazy" src="https://www.meteovista.be/widget/weather?id=4053902"></iframe>
+                </div>
+            </div>
+            
+            <div class="rs-calendar-widget">
+                <div class="rs-cal-widget">
+                    <div class="rs-cal-header">
+                        <div class="rs-cal-title"></div>
+                        <div class="rs-cal-nav">
+                            <button id="prev-month"><</button>
+                            <button id="next-month">></button>
+                        </div>
+                    </div>
+                    <div class="rs-cal-grid">
+                        <div class="rs-cal-weekday">Ma</div>
+                        <div class="rs-cal-weekday">Di</div>
+                        <div class="rs-cal-weekday">Wo</div>
+                        <div class="rs-cal-weekday">Do</div>
+                        <div class="rs-cal-weekday">Vr</div>
+                        <div class="rs-cal-weekday">Za</div>
+                        <div class="rs-cal-weekday">Zo</div>
+                        <!-- Calendar days will be generated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="week-events-container">
+            <h3>📅 Geplande Evenementen Deze Week</h3>
+            {% if week_events %}
+                <div class="events-list">
+                    {% for event in week_events %}
+                        <div class="event-card">
+                            <div class="event-row">
+                                <strong>📍 Adres:</strong> {{ event.event_adres }}
+                            </div>
+                            <div class="event-row">
+                                <strong>🕒 Tijd:</strong> {{ event.gewenste_datum|date:"D d/m" }} - {{ event.gewenste_tijd|time:"H:i" }}
+                            </div>
+                            <div class="event-row">
+                                <strong>👥 Personen:</strong> {{ event.aantal_personen }}
+                            </div>
+                            <div class="event-row">
+                                <strong>🍽️ Formule:</strong> {{ event.formule }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="no-events">Geen evenementen gepland deze week.</p>
+            {% endif %}
+        </div>
+
+<br>
+<br>
+
+<div class="container my-5">
+  
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Nieuwe Actie Toevoegen</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                {{ actie_form.media }} {% for field in actie_form %}
+                    <div class="mb-3">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% if field.help_text %}
+                            <div class="form-text">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                <button type="submit" name="actie_submit" class="btn btn-primary w-100">
+                    <i class="fas fa-plus-circle me-2"></i> Toevoegen
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <h3 class="mb-4 text-center text-secondary">Huidige Acties</h3>
+
+    {% if acties %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for actie in acties %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0 actie-card">
+                        <div class="card-body d-flex flex-column">
+                            <h4 class="card-title text-secondary">{{ actie.titel }}</h4>
+                            <p class="card-text text-muted flex-grow-1">{{ actie.omschrijving }}</p>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <small class="text-secondary">Geldig tot: {{ actie.actief_tot|date:"d M Y" }}</small>
+                                <form method="post" class="ms-auto" onsubmit="return confirm('Weet je zeker dat je \'{{ actie.titel }}\' wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.');">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="actie_id" value="{{ actie.pk }}">
+                                    <button type="submit" name="delete_actie_submit" class="btn btn-outline-danger btn-sm">
+                                        <i class="fas fa-trash-alt"></i> Verwijder
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center" role="alert">
+            <i class="fas fa-info-circle me-2"></i> Er zijn momenteel geen acties om weer te geven.
+        </div>
+    {% endif %}
+</div>
+
+    
+    </main>
+
+
+
+    <!-- Bootstrap JS (voor navbar collapse) -->
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleButton = document.getElementById("toggleAddNote");
+            const noteForm = document.getElementById("addNoteForm");
+            const cancelButton = document.getElementById("cancelNote");
+    
+            toggleButton.addEventListener("click", function () {
+                clearNoteForm();
+                noteForm.style.display = noteForm.style.display === "none" ? "block" : "none";
+            });
+    
+            cancelButton.addEventListener("click", function () {
+                clearNoteForm();
+                noteForm.style.display = "none";
+            });
+    
+            window.editNote = function (id, title, content) {
+                document.getElementById("noteTitle").value = title;
+                document.getElementById("noteContent").value = content;
+    
+                // Voeg hidden input toe voor note_id en wijzig actie
+                let hiddenId = document.getElementById("noteIdInput");
+                if (!hiddenId) {
+                    hiddenId = document.createElement("input");
+                    hiddenId.type = "hidden";
+                    hiddenId.name = "note_id";
+                    hiddenId.id = "noteIdInput";
+                    noteForm.querySelector("form").appendChild(hiddenId);
+                }
+                hiddenId.value = id;
+    
+                document.querySelector("input[name='action']").value = "edit_note";
+                noteForm.style.display = "block";
+            };
+    
+            function clearNoteForm() {
+                document.getElementById("noteTitle").value = "";
+                document.getElementById("noteContent").value = "";
+                document.querySelector("input[name='action']").value = "add_note";
+                const hiddenId = document.getElementById("noteIdInput");
+                if (hiddenId) hiddenId.remove();
+            }
+        });
+    </script>
+    
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const prevMonthBtn = document.getElementById('prev-month');
+    const nextMonthBtn = document.getElementById('next-month');
+    const calendarTitle = document.querySelector('.rs-cal-title');
+    const calendarGrid = document.querySelector('.rs-cal-grid');
+
+    let currentDate = new Date();
+    let currentMonth = currentDate.getMonth();
+    let currentYear = currentDate.getFullYear();
+    let events = [];
+
+    // Function to fetch events from the server
+    function fetchEvents() {
+        fetch("{% url 'kalender_events' %}")
+            .then(response => response.json())
+            .then(data => {
+                events = data;
+                generateCalendar(currentMonth, currentYear);
+            })
+            .catch(error => console.error('Error fetching events:', error));
+    }
+
+    // Function to check if a day has events (returns array of events)
+    function getEventsForDay(day, month, year) {
+        const dateStr = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+        return events.filter(event => event.date === dateStr);
+    }
+
+    function generateCalendar(month, year) {
+        // Clear all existing days except weekdays
+        const weekdays = Array.from(calendarGrid.querySelectorAll('.rs-cal-weekday'));
+        calendarGrid.innerHTML = '';
+        weekdays.forEach(day => calendarGrid.appendChild(day));
+
+        const monthNames = ['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni',
+            'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December'];
+        calendarTitle.textContent = `${monthNames[month]} ${year}`;
+
+        // Calculate calendar days
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        let firstDayOfWeek = firstDay.getDay();
+        firstDayOfWeek = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1;
+
+        const prevMonth = month === 0 ? 11 : month - 1;
+        const prevYear = month === 0 ? year - 1 : year;
+        const daysInPrevMonth = new Date(prevYear, prevMonth + 1, 0).getDate();
+
+        // Previous month days
+        for (let i = 0; i < firstDayOfWeek; i++) {
+            const el = document.createElement('div');
+            el.className = 'rs-cal-day other-month';
+            el.textContent = daysInPrevMonth - firstDayOfWeek + i + 1;
+            calendarGrid.appendChild(el);
+        }
+
+        // Current month days
+        const today = new Date();
+        const isCurrentMonth = today.getMonth() === month && today.getFullYear() === year;
+
+        for (let i = 1; i <= lastDay.getDate(); i++) {
+            const el = document.createElement('div');
+            el.classList.add('rs-cal-day');
+            
+            // Day number display
+            const dayNumEl = document.createElement('span');
+            dayNumEl.textContent = i;
+            el.appendChild(dayNumEl);
+            
+            // Check for events
+            const dayEvents = getEventsForDay(i, month, year);
+            if (dayEvents.length > 0) {
+                // Add event dot
+                const dotEl = document.createElement('div');
+                dotEl.className = 'event-dot';
+                el.appendChild(dotEl);
+                
+                // Update dot color based on number of events
+                if (dayEvents.length > 1) {
+                    dotEl.style.backgroundColor = '#ff6b6b'; // Lichter rood voor meerdere events
+                }
+                
+                // Add event information and click handler
+                el.classList.add('has-event');
+                el.addEventListener('click', () => {
+                    let eventDetails = `📅 ${i}/${month + 1}/${year}\n\n`;
+                    dayEvents.forEach((event, index) => {
+                        eventDetails += `🎉 Evenement ${index + 1}:\n`;
+                        eventDetails += `   Bedrijf: ${event.title}\n`;
+                        eventDetails += `   Adres: ${event.event_adres}\n`;
+                        eventDetails += `   Tijd: ${event.gewenste_tijd}\n`;
+                        eventDetails += `   Personen: ${event.aantal_personen}\n`;
+                        eventDetails += `   Formule: ${event.formule}\n\n`;
+                    });
+                    alert(eventDetails);
+                });
+            }
+            
+            // Highlight today's date
+            if (isCurrentMonth && i === today.getDate()) {
+                el.classList.add('current');
+            }
+            
+            calendarGrid.appendChild(el);
+        }
+
+        // Next month days
+        const totalCells = 42; // 6 rows × 7 days
+        const filledCells = firstDayOfWeek + lastDay.getDate();
+        const remainder = totalCells - filledCells;
+
+        for (let i = 1; i <= remainder; i++) {
+            const el = document.createElement('div');
+            el.className = 'rs-cal-day other-month';
+            el.textContent = i;
+            calendarGrid.appendChild(el);
+        }
+    }
+
+    prevMonthBtn.addEventListener('click', () => {
+        currentMonth--;
+        if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
+        }
+        generateCalendar(currentMonth, currentYear);
+    });
+
+    nextMonthBtn.addEventListener('click', () => {
+        currentMonth++;
+        if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
+        }
+        generateCalendar(currentMonth, currentYear);
+    });
+
+    // Initialize calendar
+    fetchEvents();
+});
+        </script>
+        
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>

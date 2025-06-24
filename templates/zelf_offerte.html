@@ -1,0 +1,451 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - RetroSnacks</title>
+    <!-- favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <!-- Android/Chrome -->
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'android-chrome-192x192.png' %}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{% static 'android-chrome-512x512.png' %}">
+    <!-- Iphone -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon-180x180.png' %}">
+    <!-- Bootstrap CSS via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- Eigen CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+    :root {
+            --primary-color: #4d772b;
+            --primary-hover: #0a4a9e;
+            --secondary-color: #b4b0a7;
+            --accent-color: #b88f53;
+            --text-dark: #333;
+            --text-light: #6c757d;
+            --white: #fff;
+            --light-bg: #f8f9fa;
+            --border-color: #dee2e6;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --radius: 10px;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #b7bbbecb;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+        }
+
+.dashboard-header {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow);
+}
+
+.dashboard-header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.dashboard-nav {
+    display: flex;
+    gap: 15px;
+}
+
+.dashboard-nav a {
+    color: var(--white);
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: var(--radius);
+    transition: background-color 0.2s;
+}
+
+.dashboard-nav a:hover {
+    background-color: rgba(255,255,255,0.2);
+}
+
+.dashboard-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+        .invoice-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .invoice-header {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: center;
+            border-bottom: 2沿海px solid #eee;
+            padding-bottom: 10px;
+        }
+        .invoice-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .invoice-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #f1f1f1;
+            transition: background-color 0.3s ease;
+        }
+        .invoice-item:hover {
+            background-color: #f9f9f9;
+        }
+        .invoice-id {
+            font-weight: bold;
+            color: #2980b9;
+            min-width: 100px;
+        }
+        .invoice-client {
+            flex-grow: 1;
+            margin-left: 20px;
+            color: #34495e;
+        }
+        .invoice-date {
+            color: #7f8c8d;
+            min-width: 120px;
+            text-align: center;
+        }
+        .invoice-status {
+            font-weight: bold;
+            color: #27ae60;
+            min-width: 100px;
+            text-align: right;
+        }
+        .invoice-status.overdue {
+            color: #c0392b;
+        }
+   /* Responsieve aanpassing voor kleine schermen */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        padding: 0;
+        margin: 1rem auto;
+    }
+    
+    .dashboard-header {
+        flex-direction: column;
+        padding: 10px;
+        text-align: center;
+    }
+    
+    .dashboard-header h1 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+    
+    .dashboard-nav {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+        width: 100%;
+    }
+    
+    .dashboard-nav a {
+        padding: 8px 5px;
+        font-size: 0.85rem;
+        text-align: center;
+    }
+}
+.groen {
+    background-color: #4d772b;
+}
+        
+    </style>
+</head>
+<body>
+    {% load static %}
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+        <h1>RetroSnacks Dashboard</h1>
+        <nav class="dashboard-nav">
+            <a href="{% url 'dashboard' %}"><i class="bi bi-house-door me-1"></i></a>
+            <a href="{% url 'offertes' %}">Offertes</a>
+            <a href="{% url 'geplande_feesten' %}">Geplande events</a>
+            <a href="{% url 'klanten' %}">Klanten</a>
+            <a href="{% url 'facturen' %}">Facturen</a>
+            <a href="{% url 'logout' %}">Uitloggen</a>
+        </nav>
+    </header>
+
+    <br>
+    <br>
+    <div class="container mt-4">
+        <h1 class="mb-4">Nieuwe Offerte Aanmaken</h1>
+        
+        <div class="card">
+            <div class="card-header groen text-white">
+                <h4 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i>Offerte gegevens</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" id="zelfOfferteForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="is_bevestigd" value="Nieuwe offerte">
+                    
+                    <!-- Klant gegevens -->
+                    <h5 class="border-bottom pb-2 mb-3">Klant gegevens</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="naam_contactpersoon" class="form-label">Naam contactpersoon *</label>
+                            <input type="text" class="form-control" id="naam_contactpersoon" name="naam_contactpersoon" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="naam_bedrijf" class="form-label">Naam bedrijf</label>
+                            <input type="text" class="form-control" id="naam_bedrijf" name="naam_bedrijf">
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">E-mailadres *</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="telefoon" class="form-label">Telefoonnummer *</label>
+                            <input type="tel" class="form-control" id="telefoon" name="telefoon" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="btw_nummer" class="form-label">BTW-nummer</label>
+                            <input type="text" class="form-control" id="btw_nummer" name="btw_nummer">
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="straat" class="form-label">Straat *</label>
+                            <input type="text" class="form-control" id="straat" name="straat" required>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="nummer" class="form-label">Nummer *</label>
+                            <input type="text" class="form-control" id="nummer" name="nummer" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="gemeente" class="form-label">Gemeente *</label>
+                            <input type="text" class="form-control" id="gemeente" name="gemeente" required>
+                        </div>
+                    </div>
+                    
+                    <!-- Event gegevens -->
+                    <h5 class="border-bottom pb-2 mb-3 mt-4">Event gegevens</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="gewenste_datum" class="form-label">Gewenste datum *</label>
+                            <input type="date" class="form-control" id="gewenste_datum" name="gewenste_datum" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="gewenste_tijd" class="form-label">Gewenste tijd *</label>
+                            <input type="time" class="form-control" id="gewenste_tijd" name="gewenste_tijd" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="event_adres" class="form-label">Event adres *</label>
+                            <input type="text" class="form-control" id="event_adres" name="event_adres" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="aantal_personen" class="form-label">Aantal personen *</label>
+                            <input type="number" class="form-control" id="aantal_personen" name="aantal_personen" min="1" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Formule *</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="formule" id="formule1" value="8" required>
+                                <label class="form-check-label" for="formule1">⭐ Formule 1 (€8 p.p. - min. €395)</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="formule" id="formule2" value="9">
+                                <label class="form-check-label" for="formule2">⭐⭐ Formule 2 (€9 p.p. - min. €395)</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="formule" id="formule3" value="10.5">
+                                <label class="form-check-label" for="formule3">⭐⭐⭐ Luxe Formule (€10,50 p.p. - min. €450)</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="extra_info" class="form-label">Extra informatie of opmerkingen</label>
+                            <textarea class="form-control" id="extra_info" name="extra_info" rows="3"></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Prijs berekening -->
+                    <h5 class="border-bottom pb-2 mb-3 mt-4">Prijs berekening</h5>
+                    <div class="row mb-3">
+                     
+                        <div class="col-md-4">
+                            <label for="basis_prijs_display" class="form-label">Basis prijs (€)</label>
+                            <div class="input-group">
+                                <span class="form-control bg-light" id="basis_prijs_display"></span>
+                                <input type="hidden" id="basis_prijs" name="basis_prijs" value="0">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="extra_kosten" class="form-label">Extra kosten (€)</label>
+                            <input type="number" step="0.01" class="form-control" id="extra_kosten" name="extra_kosten">
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="korting" class="form-label">Korting (€)</label>
+                            <input type="number" step="0.01" class="form-control" id="korting" name="korting">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="totaal_prijs" class="form-label">Totaal prijs (€) *</label>
+                            <input type="number" step="0.01" class="form-control" id="totaal_prijs" name="totaal_prijs" required>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-end mt-4">
+                        <a href="{% url 'offertes' %}" class="btn btn-secondary me-2">Annuleren</a>
+                        <button type="submit" class="btn groen text-white">Offerte opslaan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+    // Get all elements that affect price calculations
+    const aantalPersonenInput = document.getElementById('aantal_personen');
+    const formuleInputs = document.querySelectorAll('input[name="formule"]');
+    const extraKostenInput = document.getElementById('extra_kosten');
+    const kortingInput = document.getElementById('korting');
+    const basisPrijsInput = document.getElementById('basis_prijs');
+    const basisPrijsDisplay = document.getElementById('basis_prijs_display');
+    const totaalPrijsInput = document.getElementById('totaal_prijs');
+    
+    // Verborgen veld toevoegen voor de formule naam
+    const formuleNaamInput = document.createElement('input');
+    formuleNaamInput.type = 'hidden';
+    formuleNaamInput.id = 'formule_naam';
+    formuleNaamInput.name = 'formule_naam';
+    document.getElementById('zelfOfferteForm').appendChild(formuleNaamInput);
+    
+    // Function to calculate base price
+    const calculateBasePrice = function() {
+        const aantalPersonen = parseInt(aantalPersonenInput.value) || 0;
+        const selectedFormule = document.querySelector('input[name="formule"]:checked');
+        const formuleWaarde = parseFloat(selectedFormule?.value) || 0;
+        
+        // Set formule naam based on selected formule
+        if (selectedFormule) {
+            const formuleLabel = selectedFormule.nextElementSibling.textContent.trim();
+            formuleNaamInput.value = formuleLabel.split('(')[0].trim();
+            console.log('Geselecteerde formule naam:', formuleNaamInput.value);
+        }
+        
+        // Calculate base price: formule x personen
+        let basisPrijs = aantalPersonen * formuleWaarde;
+        
+        // Apply minimum amounts based on formula
+        if (formuleWaarde === 8 || formuleWaarde === 9) {
+            basisPrijs = Math.max(basisPrijs, 395);
+        } else if (formuleWaarde === 10.5) {
+            basisPrijs = Math.max(basisPrijs, 450);
+        }
+        
+        console.log('Berekening basis prijs:', aantalPersonen, 'personen x', formuleWaarde, '€ =', basisPrijs, '€');
+        
+        // Update display and hidden field
+        basisPrijsDisplay.textContent = basisPrijs.toFixed(2);
+        basisPrijsInput.value = basisPrijs.toFixed(2);
+        
+        // Update total price after base price changes
+        calculateTotalPrice();
+    };
+    
+    // Function to calculate total price
+    const calculateTotalPrice = function() {
+        const basisPrijs = parseFloat(basisPrijsInput.value) || 0;
+        const extraKosten = parseFloat(extraKostenInput.value) || 0;
+        const korting = parseFloat(kortingInput.value) || 0;
+        
+        // Calculate total price
+        const totaalPrijs = basisPrijs + extraKosten - korting;
+        console.log('Berekening totaal prijs:', basisPrijs, '+ extra kosten', extraKosten, '- korting', korting, '=', totaalPrijs);
+        
+        totaalPrijsInput.value = totaalPrijs.toFixed(2);
+    };
+    
+    // Add event listeners for form fields
+    aantalPersonenInput.addEventListener('input', calculateBasePrice);
+    formuleInputs.forEach(el => {
+        el.addEventListener('change', calculateBasePrice);
+    });
+    extraKostenInput.addEventListener('input', calculateTotalPrice);
+    kortingInput.addEventListener('input', calculateTotalPrice);
+    
+    // Run calculations on page load if formula already selected
+    if (document.querySelector('input[name="formule"]:checked')) {
+        calculateBasePrice();
+    } else {
+        // Set default formula if none selected
+        const defaultFormule = document.getElementById('formule1');
+        if (defaultFormule) {
+            defaultFormule.checked = true;
+            calculateBasePrice();
+        }
+    }
+    
+    // Form submission handler
+    document.getElementById('zelfOfferteForm').addEventListener('submit', function(event) {
+        // Ensure calculations are up to date
+        calculateBasePrice();
+        calculateTotalPrice();
+        
+        console.log('Bij verzenden formulier:', 
+            'Basis prijs:', basisPrijsInput.value,
+            'Formule naam:', formuleNaamInput.value,
+            'Totaal prijs:', totaalPrijsInput.value);
+        
+        // Validate form before submission
+        if (parseFloat(totaalPrijsInput.value) <= 0) {
+            event.preventDefault();
+            alert('Controleer de prijsberekening voordat u het formulier verzendt.');
+        }
+    });
+});
+    </script>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>

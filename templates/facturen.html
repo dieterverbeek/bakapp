@@ -1,0 +1,436 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - RetroSnacks</title>
+    <!-- Bootstrap CSS via CDN -->
+    <!-- favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <!-- Android/Chrome -->
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'android-chrome-192x192.png' %}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{% static 'android-chrome-512x512.png' %}">
+    <!-- Iphone -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon-180x180.png' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- Eigen CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+    :root {
+            --primary-color: #4d772b;
+            --primary-hover: #0a4a9e;
+            --secondary-color: #b4b0a7;
+            --accent-color: #b88f53;
+            --text-dark: #333;
+            --text-light: #6c757d;
+            --white: #fff;
+            --light-bg: #f8f9fa;
+            --border-color: #dee2e6;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --radius: 10px;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #b7bbbecb;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+        }
+
+.dashboard-header {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow);
+}
+
+.dashboard-header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.dashboard-nav {
+    display: flex;
+    gap: 15px;
+}
+
+.dashboard-nav a {
+    color: var(--white);
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: var(--radius);
+    transition: background-color 0.2s;
+}
+
+.dashboard-nav a:hover {
+    background-color: rgba(255,255,255,0.2);
+}
+
+.dashboard-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+        .invoice-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .invoice-header {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: center;
+            border-bottom: 2沿海px solid #eee;
+            padding-bottom: 10px;
+        }
+        .invoice-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .invoice-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #f1f1f1;
+            transition: background-color 0.3s ease;
+        }
+        .invoice-item:hover {
+            background-color: #f9f9f9;
+        }
+        .invoice-id {
+            font-weight: bold;
+            color: #2980b9;
+            min-width: 100px;
+        }
+        .invoice-client {
+            flex-grow: 1;
+            margin-left: 20px;
+            color: #34495e;
+        }
+        .invoice-date {
+            color: #7f8c8d;
+            min-width: 120px;
+            text-align: center;
+        }
+        .invoice-status {
+            font-weight: bold;
+            color: #27ae60;
+            min-width: 100px;
+            text-align: right;
+        }
+        .invoice-status.overdue {
+            color: #c0392b;
+        }
+   /* Responsive Design */
+
+/* Responsive Design */
+
+/* Tablets and smaller desktops */
+@media (max-width: 992px) {
+    .dashboard-main {
+        padding: 15px;
+    }
+    
+    .notes-list {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+}
+
+/* Tablets and large phones */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        padding: 0;
+        margin: 1rem auto;
+    }
+    
+    .dashboard-header {
+        flex-direction: column;
+        padding: 10px;
+        text-align: center;
+    }
+    
+    .dashboard-header h1 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+    
+    .dashboard-nav {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+        width: 100%;
+    }
+    
+    .dashboard-nav a {
+        padding: 8px 5px;
+        font-size: 0.85rem;
+        text-align: center;
+    }
+    
+    .dashboard-main {
+        padding: 15px 10px;
+    }
+    
+    .rs-dashboard-container {
+        flex-direction: column;
+    }
+    
+    .rs-weather-widget, 
+    .rs-calendar-widget {
+        width: 100%;
+    }
+    
+    /* Offerte styling */
+    .offerte-container {
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 8px;
+    }
+    
+    .offerte-header {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+    
+    .offerte-item {
+        padding: 10px;
+    }
+    
+    .offerte-data {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .offerte-field {
+        padding: 3px 0;
+        width: 100%;
+    }
+    
+    /* Specifieke styling voor de velden */
+    .offerte-field.naam {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #2980b9;
+    }
+    
+    .offerte-field.event-adres,
+    .offerte-field.datum,
+    .offerte-field.tijd,
+    .offerte-field.status {
+        font-size: 0.9rem;
+        text-align: left;
+    }
+    
+    /* Speciale aanpassing voor aantal-personen met "personen" tekst */
+    .offerte-field.aantal-personen {
+        font-size: 0.9rem;
+        text-align: left;
+    }
+    
+    .offerte-field.aantal-personen::after {
+        content: " personen";
+    }
+    
+    .offerte-item.header {
+        display: none; /* Verberg de header rij op mobiel */
+    }
+    
+    .offerte-actions {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px 0;
+    }
+    
+    .action-group, .status-actions {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+        width: 100%;
+    }
+    
+    .offerte-actions button, 
+    .offerte-actions a {
+        width: 100%;
+        margin: 0;
+        padding: 8px 5px;
+        font-size: 0.8rem;
+    }
+    
+    /* Factuur styling */
+    .invoice-container {
+        padding: 15px;
+        box-shadow: none;
+        border-radius: 0;
+    }
+    
+    .invoice-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 12px 10px;
+    }
+    
+    .invoice-id,
+    .invoice-date,
+    .invoice-status {
+        min-width: unset;
+        text-align: left;
+        width: 100%;
+    }
+    
+    .invoice-client {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    .invoice-header {
+        font-size: 22px;
+    }
+    
+    /* UI Components */
+    .btn-sm {
+        padding: 6px;
+    }
+    
+    .search-bar {
+        padding: 8px 10px;
+    }
+    
+    #search-input {
+        font-size: 0.9rem;
+    }
+    
+    .search-icon {
+        font-size: 1rem;
+    }
+    
+    .add-offerte-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 20px;
+    }
+    
+    .modal-content {
+        padding: 15px;
+    }
+    
+    .modal-body p {
+        font-size: 0.9rem;
+        margin: 3px 0;
+    }
+}
+
+/* Mobile phones */
+@media (max-width: 576px) {
+    .dashboard-content-wrapper {
+        flex-direction: column;
+    }
+    
+    .social-buttons {
+        flex-direction: row;
+        justify-content: center;
+        gap: 20px;
+        padding: 15px 0;
+    }
+    
+    .notes-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .note-card {
+        padding: 12px;
+    }
+    
+    .btn-primary, 
+    .btn-success, 
+    .btn-secondary {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .rs-cal-day {
+        padding: 5px 0;
+        font-size: 0.9rem;
+    }
+    
+    /* Extra mobile styling for offertes */
+    .offerte-actions button, 
+    .offerte-actions a {
+        padding: 6px 3px;
+        font-size: 0.75rem;
+    }
+}
+        
+    </style>
+</head>
+<body>
+    {% load static %}
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+        <h1>RetroSnacks Dashboard</h1>
+        <nav class="dashboard-nav">
+            <a href="{% url 'dashboard' %}"><i class="bi bi-house-door me-1"></i></a>
+            <a href="{% url 'offertes' %}">Offertes</a>
+            <a href="{% url 'geplande_feesten' %}">Geplande events</a>
+            <a href="{% url 'klanten' %}">Klanten</a>
+            <a href="{% url 'facturen' %}">Facturen</a>
+            <a href="{% url 'logout' %}">Uitloggen</a>
+        </nav>
+    </header>
+
+    <br>
+    <br>
+
+
+
+    <div class="invoice-container">
+        <h1 class="invoice-header">Overzicht Facturen</h1>
+        <ul class="invoice-list">
+            {% for invoice in invoices %}
+                <li class="invoice-item">
+                    <span class="invoice-id">{{ invoice.invoice_id }}</span>
+                    <span class="invoice-number">{{ invoice.number }}</span>
+                    <span class="invoice-client">{{ invoice.client_name }}</span>
+                    <span class="invoice-date">{{ invoice.date }}</span>
+                    <span class="invoice-status {% if invoice.status == 'overdue' %}overdue{% endif %}">
+                        {{ invoice.status }}
+                    </span>
+                    <span class="invoice-days-overdue">
+                        {% if invoice.days_overdue > 0 %}{{ invoice.days_overdue }} dagen{% endif %}
+                    </span>
+                </li>
+            {% empty %}
+                <li class="invoice-item">Geen facturen beschikbaar.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>
