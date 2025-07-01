@@ -20,6 +20,7 @@ from .forms import OfferteForm
 from django.contrib import messages
 from .forms import CateringRequestForm
 from .models import Note, Klant
+
 from django.views.decorators.http import require_POST
 from decimal import Decimal
 from datetime import date, timedelta
@@ -27,6 +28,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.generic import ListView
 from .models import ActieVanHetMoment
 from django.utils.timezone import now  # Voor de today datum
+from django.utils.html import strip_tags
 
 import re
 from django.http import JsonResponse
@@ -328,6 +330,7 @@ def klanten_view(request):
     return render(request, "klanten.html", {"klanten": klanten})
 
 
+
 # gewoon contactform contactform
 def contact(request):
     if request.method == 'POST':
@@ -337,45 +340,70 @@ def contact(request):
             email = form.cleaned_data['email']
             subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
-            
-            # Maak een simpele HTML-e-mail
+
+            # --- Maak de HTML e-mail in de gewenste stijl ---
             html_message = f"""
             <html>
+            <head>
+                <style>
+                    body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                    .container {{ width: 80%; margin: 20px auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px; background-color: #f9f9f9; }}
+                    h2 {{ color: #0056b3; border-bottom: 2px solid #0056b3; padding-bottom: 10px; margin-bottom: 20px; }}
+                    h3 {{ color: #0056b3; margin-bottom: 15px; }}
+                    p {{ margin-bottom: 10px; }}
+                    strong {{ color: #0056b3; }}
+                    ul {{ list-style: none; padding: 0; }}
+                    ul li {{ margin-bottom: 5px; }}
+                    a {{ color: #007bff; text-decoration: none; }}
+                    a:hover {{ text-decoration: underline; }}
+                    .info-section {{ background-color: #e6f2ff; padding: 15px; border-radius: 5px; margin-bottom: 15px; }}
+                    .message-section {{ background-color: #fff; border: 1px solid #ccc; padding: 15px; border-radius: 5px; }}
+                </style>
+            </head>
             <body>
-                <h3><strong>Contact Formulier</strong></h3>
-                <hr>
-                <p><strong>Onderwerp:</strong> {subject}</p>
-                <p><strong>Naam:</strong> {name}</p>
-                <p><strong>E-mail:</strong> <a href="mailto:{email}">{email}</a></p>
-                <hr>
-                <p><strong>Bericht:</strong></p>
-                <p>{message}</p>
+                <div class="container">
+                    <h2>Contactformulier aanvraag</h2>
+                    <div class="info-section">
+                        <p><strong>Onderwerp:</strong> {subject}</p>
+                        <p><strong>Naam:</strong> {name}</p>
+                        <p><strong>E-mail:</strong> <a href="mailto:{email}">{email}</a></p>
+                    </div>
+                    <div class="message-section">
+                        <p><strong>Bericht:</strong></p>
+                        <p>{message}</p>
+                    </div>
+                </div>
             </body>
             </html>
             """
-            
+
+            # Maak ook een plain text versie vanuit de HTML
+            plain_message = strip_tags(html_message)
+
             try:
                 send_mail(
                     subject=f"Contact Formulier: {subject}",
-                    message=f"Naam: {name}\nE-mail: {email}\nOnderwerp: {subject}\n\n{message}",  # Platte tekst fallback
+                    message=plain_message, # Gebruik de plain_message die we uit de HTML hebben gehaald
                     from_email=settings.EMAIL_HOST_USER,
-                    recipient_list=['info@retrosnacks.be'],
-                    html_message=html_message,  # HTML-versie met klikbaar e-mailadres
+                    recipient_list=['Info@retrosnacks.be'],
+                    html_message=html_message, # HTML-versie
                     fail_silently=False,
                 )
                 messages.success(request, 'Uw bericht is verzonden!')
                 return redirect('contact')
             except Exception as e:
                 messages.error(request, f'Er is een fout opgetreden: {str(e)}')
+        else:
+            # Als het formulier niet geldig is, render dan de pagina opnieuw met de fouten
+            messages.error(request, 'Controleer de ingevoerde gegevens. Er zijn fouten in het formulier.')
     else:
         form = ContactForm()
-    
+
     return render(request, 'contact.html', {'form': form})
 
 
 
-
-# groot event contactform--------------------------------------------
+# Groot event contactform
 def event(request):
     if request.method == 'POST':
         # Haal alle formuliergegevens op
@@ -390,51 +418,67 @@ def event(request):
         foodtrucks = request.POST.getlist('foodtrucks')  # Krijg alle geselecteerde foodtrucks
         extra_info = request.POST.get('extra_info')
 
-        # Maak de HTML e-mail
+        # --- Maak de HTML e-mail ---
         html_message = f"""
         <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ width: 80%; margin: 20px auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px; background-color: #f9f9f9; }}
+                h2 {{ color: #0056b3; border-bottom: 2px solid #0056b3; padding-bottom: 10px; margin-bottom: 20px; }}
+                h3 {{ color: #0056b3; margin-bottom: 15px; }}
+                p {{ margin-bottom: 10px; }}
+                strong {{ color: #0056b3; }}
+                ul {{ list-style: none; padding: 0; }}
+                ul li {{ margin-bottom: 5px; }}
+                a {{ color: #007bff; text-decoration: none; }}
+                a:hover {{ text-decoration: underline; }}
+                .info-section {{ background-color: #e6f2ff; padding: 15px; border-radius: 5px; margin-bottom: 15px; }}
+                .extra-info {{ background-color: #fff; border: 1px solid #ccc; padding: 15px; border-radius: 5px; }}
+            </style>
+        </head>
         <body>
-            <h3><strong>Groot evenementen aanvraag</strong></h3>
-            <hr>
-            <p><strong>Naam:</strong> {name}</p>
-            <p><strong>Bedrijf/Organisatie:</strong> {company or 'Niet opgegeven'}</p>
-            <p><strong>E-mail:</strong> <a href="mailto:{email}">{email}</a></p>
-            <p><strong>Telefoonnummer:</strong> {phone}</p>
-            <p><strong>Naam event:</strong> {event_name or 'Niet opgegeven'}</p>
-            <p><strong>Datum evenement:</strong> {event_date}</p>
-            <p><strong>Adres evenement:</strong> {event_locatie}</p>
-            <p><strong>Verwacht aantal bezoekers:</strong> {visitors}</p>
-            <p><strong>Gewenste foodtruck(s):</strong> {', '.join(foodtrucks) if foodtrucks else 'Geen geselecteerd'}</p>
-            <p><strong>Extra informatie:</strong></p>
-            <p>{extra_info or 'Geen extra info'}</p>
+            <div class="container">
+                <h2>Groot Evenementen Aanvraag</h2>
+                <div class="info-section">
+                    <p><strong>Contactgegevens:</strong></p>
+                    <ul>
+                        <li><strong>Naam:</strong> {name}</li>
+                        <li><strong>Bedrijf/Organisatie:</strong> {company or 'Niet opgegeven'}</li>
+                        <li><strong>E-mail:</strong> <a href="mailto:{email}">{email}</a></li>
+                        <li><strong>Telefoonnummer:</strong> {phone}</li>
+                    </ul>
+                </div>
+                <div class="info-section">
+                    <p><strong>Evenement Details:</strong></p>
+                    <ul>
+                        <li><strong>Naam evenement:</strong> {event_name or 'Niet opgegeven'}</li>
+                        <li><strong>Datum evenement:</strong> {event_date}</li>
+                        <li><strong>Adres evenement:</strong> {event_locatie}</li>
+                        <li><strong>Verwacht aantal bezoekers:</strong> {visitors}</li>
+                        <li><strong>Gewenste foodtruck(s):</strong> {', '.join(foodtrucks) if foodtrucks else 'Geen geselecteerd'}</li>
+                    </ul>
+                </div>
+                <div class="extra-info">
+                    <p><strong>Extra informatie:</strong></p>
+                    <p>{extra_info or 'Geen extra info'}</p>
+                </div>
+            </div>
         </body>
         </html>
         """
 
         # Maak ook een plain text versie (altijd goed voor als HTML niet werkt)
-        plain_message = f"""
-        Catering Aanvraag
-        -----------------
-        Naam: {name}
-        Bedrijf/Organisatie: {company or 'Niet opgegeven'}
-        E-mail: {email}
-        Telefoonnummer: {phone}
-        Naam event: {event_name or 'Niet opgegeven'}
-        Datum evenement: {event_date}
-        Verwacht aantal bezoekers: {visitors}
-        Gewenste foodtruck(s): {', '.join(foodtrucks) if foodtrucks else 'Geen geselecteerd'}
-        Extra informatie:
-        {extra_info or 'Geen extra info'}
-        """
+        plain_message = strip_tags(html_message) # Genereer plain text vanuit HTML
 
         try:
             # Verstuur de e-mail
             send_mail(
                 subject=f"Catering Aanvraag: {event_date} / {visitors} personen",
-                message=plain_message,
+                message=plain_message, # Platte tekstversie
                 from_email=settings.EMAIL_HOST_USER,
-                recipient_list=['info@retrosnacks.be'],
-                html_message=html_message,
+                recipient_list=['Info@retrosnacks.be'],
+                html_message=html_message, # HTML-versie
                 fail_silently=False,
             )
             messages.success(request, 'Uw aanvraag is succesvol verzonden!')
@@ -604,7 +648,6 @@ def klant_verwijderen(request, klant_id):
     return redirect('klanten')  # Pas aan naar jouw viewnaam voor de klantenlijst
 
 # alles voor de offerte maak page ------------------------------------------------------------
-
 @require_POST
 @csrf_protect
 def save_offerte(request):
@@ -660,11 +703,6 @@ def save_offerte(request):
                     straat=cleaned_data["straat"],
                     nummer=cleaned_data["nummer"],
                     gemeente=cleaned_data["gemeente"],
-                    # event_adres wordt in je JS samengesteld, zorg dat dit veld
-                    # ofwel in OfferteForm zit, of apart wordt meegegeven als het niet direct
-                    # deel uitmaakt van de validatie van OfferteForm.
-                    # Voor nu neem ik aan dat 'event_adres' apart wordt gehaald uit 'data'
-                    # omdat het niet in je OfferteForm definitie staat.
                     event_adres=data.get("event_adres", f"{cleaned_data['straat']} {cleaned_data['nummer']}, {cleaned_data['gemeente']}"), # Fallback
                     telefoon=cleaned_data["telefoon"],
                     naam_bedrijf=cleaned_data.get("naam_bedrijf", ""),
@@ -682,60 +720,135 @@ def save_offerte(request):
                 )
                 offerte.save()
 
-                # E-mail logica (grotendeels hetzelfde, gebruik cleaned_data waar mogelijk)
-                subject = f"Nieuwe offerte aanvraag van {cleaned_data['naam_contactpersoon']}"
-                message = f"""
-Nieuwe offerte aanvraag details:
-
-Contactpersoon: {cleaned_data['naam_contactpersoon']}
-Bedrijf: {cleaned_data.get('naam_bedrijf', '-')}
-Email: {cleaned_data['email']}
-Telefoon: {cleaned_data['telefoon']}
-BTW-nummer: {cleaned_data.get('btw', '-')}
-
-Event details:
-Datum: {cleaned_data['gewenste_datum']}
-Begin tijd bakken: {cleaned_data['gewenste_tijd']}
-Locatie: {offerte.event_adres}
-Aantal personen: {cleaned_data['aantal_personen']}
-Formule: {cleaned_data['formule']}
-
-Prijs berekening:
-Basis prijs: €{float(cleaned_data.get('basis_prijs', 0)):.2f}
-Extra kosten (afstand {float(cleaned_data.get('afstand', 0)):.1f} km): €{float(cleaned_data.get('extra_kosten', 0)):.2f}
-Korting: €{float(cleaned_data.get('korting', 0)):.2f}
-Totaal: €{float(cleaned_data.get('totaal_prijs', 0)):.2f}
-
-Extra info: {cleaned_data.get('extra_info', '-')}
-"""
+                # E-mail logica (nu met HTML-opmaak)
                 from_email = settings.EMAIL_HOST_USER
-                owner_email = "dieter.verbeek@hotmail.com" # Verander indien nodig
+                owner_email = "Info@retrosnacks.be" # Verander indien nodig
+
+                # --- E-mail voor de eigenaar (met opmaak) ---
+                owner_subject = f"Nieuwe offerte aanvraag van {cleaned_data['naam_contactpersoon']}"
+                owner_html_message = f"""
+                <html>
+                <head>
+                    <style>
+                        body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                        .container {{ width: 80%; margin: 20px auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px; background-color: #f9f9f9; }}
+                        h2 {{ color: #0056b3; border-bottom: 2px solid #0056b3; padding-bottom: 10px; margin-bottom: 20px; }}
+                        p {{ margin-bottom: 10px; }}
+                        strong {{ color: #0056b3; }}
+                        .section {{ background-color: #eaedf0; padding: 15px; border-radius: 5px; margin-bottom: 15px; }}
+                        ul {{ list-style: none; padding: 0; }}
+                        ul li {{ margin-bottom: 5px; }}
+                        .price-details {{ background-color: #fff; border: 1px solid #ccc; padding: 15px; border-radius: 5px; }}
+                        .total-price {{ font-size: 1.2em; font-weight: bold; color: #d9534f; }}
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <h2>Nieuwe offerte aanvraag</h2>
+                        <div class="section">
+                            <p><strong><u>Contactgegevens:</u></strong></p>
+                            <ul>
+                                <li><strong>Naam contactpersoon:</strong> {cleaned_data['naam_contactpersoon']}</li>
+                                <li><strong>Bedrijf:</strong> {cleaned_data.get('naam_bedrijf', '-')}</li>
+                                <li><strong>Email:</strong> {cleaned_data['email']}</li>
+                                <li><strong>Telefoon:</strong> {cleaned_data['telefoon']}</li>
+                                <li><strong>BTW-nummer:</strong> {cleaned_data.get('btw', '-')}</li>
+                            </ul>
+                        </div>
+                        <div class="section">
+                            <p><strong><u>Event details:</u></strong></p>
+                            <ul>
+                                <li><strong>Datum:</strong> {cleaned_data['gewenste_datum']}</li>
+                                <li><strong>Begin tijd bakken:</strong> {cleaned_data['gewenste_tijd']}</li>
+                                <li><strong>Locatie:</strong> {offerte.event_adres}</li>
+                                <li><strong>Aantal personen:</strong> {cleaned_data['aantal_personen']}</li>
+                                <li><strong>Formule:</strong> {cleaned_data['formule']}</li>
+                            </ul>
+                        </div>
+                        <div class="price-details">
+                            <p><strong><u>Prijs berekening:</u></strong></p>
+                            <ul>
+                                <li><strong>Basis prijs:</strong> &euro;{float(cleaned_data.get('basis_prijs', 0)):.2f}</li>
+                                <li><strong>Extra kosten (afstand {float(cleaned_data.get('afstand', 0)):.1f} km):</strong> &euro;{float(cleaned_data.get('extra_kosten', 0)):.2f}</li>
+                                <li><strong>Korting:</strong> &euro;{float(cleaned_data.get('korting', 0)):.2f}</li>
+                                <li class="total-price"><strong>Totaal:</strong> &euro;{float(cleaned_data.get('totaal_prijs', 0)):.2f}</li>
+                            </ul>
+                        </div>
+                        <p><strong>Extra info:</strong> {cleaned_data.get('extra_info', '-')}</p>
+                    </div>
+                </body>
+                </html>
+                """
+                # Voor de platte tekst versie, strip de HTML tags (optioneel, maar goed voor e-mail clients die geen HTML ondersteunen)
+                from django.utils.html import strip_tags
+                owner_plain_message = strip_tags(owner_html_message)
+
+
+                # --- E-mail voor de klant (met opmaak) ---
+                klant_subject = "Offerte Retrosnacks / Aanvraag beschikbaarheid datum"
+                klant_html_message = f"""
+                <html>
+                <head>
+                    <style>
+                        body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                        .container {{ width: 80%; margin: 20px auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px; background-color: #f9f9f9; }}
+                        /* Groen vervangen door blauw */
+                        h2 {{ color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 10px; margin-bottom: 20px; }}
+                        p {{ margin-bottom: 10px; }}
+                        /* Groen vervangen door blauw */
+                        strong {{ color: #007bff; }}
+                        ul {{ list-style: none; padding: 0; }}
+                        ul li {{ margin-bottom: 5px; }}
+                        .note {{ background-color: #fff3cd; color: #856404; padding: 10px; border: 1px solid #ffeeba; border-radius: 5px; margin-top: 20px; }}
+                        .total-price {{ font-size: 1.2em; font-weight: bold; color: #d9534f; }}
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <h2>Bedankt voor uw aanvraag bij Retrosnacks!</h2>
+                        <p>Beste <strong>{cleaned_data['naam_contactpersoon']}</strong>,</p>
+                        <p class="note">Gelieve niet op deze mail te antwoorden, dit is een automatische bevestiging.</p>
+                        <p>We hebben uw aanvraag ontvangen en zullen <strong>binnen 24 uur</strong> contact met u opnemen over de beschikbaarheid en eventuele verdere details.</p>
+
+                        <h3>Details van uw aanvraag:</h3>
+                        <ul>
+                            <li><strong>Datum:</strong> {cleaned_data['gewenste_datum']}</li>
+                            <li><strong>Begin tijd bakken:</strong> {cleaned_data['gewenste_tijd']}</li>
+                            <li><strong>Locatie:</strong> {offerte.event_adres}</li>
+                            <li><strong>Aantal personen:</strong> {cleaned_data['aantal_personen']}</li>
+                            <li><strong>Formule:</strong> {cleaned_data['formule']}</li>
+                            <li><strong>Extra informatie:</strong> {cleaned_data.get('extra_info', '-')}</li>
+                            <li class="total-price"><strong>Totaal bedrag:</strong> &euro;{float(cleaned_data.get('totaal_prijs', 0)):.2f} (Prijs is inclusief 12% BTW en transportkosten)</li>
+                        </ul>
+
+                        <p>Met vriendelijke groeten,</p>
+                        <p><strong>Het team van Retrosnacks</strong></p>
+                    </div>
+                </body>
+                </html>
+                """
+                klant_plain_message = strip_tags(klant_html_message)
 
                 try:
-                    send_mail(subject, message, from_email, [owner_email], fail_silently=False)
+                    # Verstuur e-mail naar de eigenaar
+                    send_mail(
+                        owner_subject,
+                        owner_plain_message, # Plain text fallback
+                        from_email,
+                        [owner_email],
+                        html_message=owner_html_message, # HTML-versie
+                        fail_silently=False
+                    )
 
-                    klant_subject = "Offerte Retrosnacks / Aanvraag beschikbaarheid datum"
-                    klant_bericht = f"""
-Beste {cleaned_data['naam_contactpersoon']},
-
-Gelieve niet op deze mail te antwoorden, dit is een automatische bevestiging.
-
-Bedankt voor uw interesse in Retrosnacks!
-
-We hebben uw aanvraag ontvangen en zullen binnen 24 uur contact met u opnemen over de beschikbaarheid.
-
-Details van uw aanvraag:
-Datum: {cleaned_data['gewenste_datum']}
-Begin tijd bakken: {cleaned_data['gewenste_tijd']}
-Locatie: {offerte.event_adres}
-Aantal personen: {cleaned_data['aantal_personen']}
-Formule: {cleaned_data['formule']}
-Totaal bedrag: €{float(cleaned_data.get('totaal_prijs', 0)):.2f} (Prijs is inclusief 12% BTW en transportkosten)
-
-Met vriendelijke groeten,
-Retrosnacks
-"""
-                    send_mail(klant_subject, klant_bericht, from_email, [cleaned_data['email']], fail_silently=False)
+                    # Verstuur e-mail naar de klant
+                    send_mail(
+                        klant_subject,
+                        klant_plain_message, # Plain text fallback
+                        from_email,
+                        [cleaned_data['email']],
+                        html_message=klant_html_message, # HTML-versie
+                        fail_silently=False
+                    )
 
                 except Exception as e:
                     print(f"Fout bij verzenden van e-mails: {str(e)}")
@@ -772,7 +885,6 @@ Retrosnacks
         "success": False,
         "error": "Ongeldige methode"
     }, status=405) # Method Not Allowed
-
 
 # klant aanmaken eenvoudigfacturen ----------------------------------------------------------
 @login_required
